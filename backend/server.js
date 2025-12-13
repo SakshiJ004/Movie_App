@@ -21,6 +21,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
 app.use("/api/watchlist", watchlistRoutes)
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Movie App API is running",
+    status: "active",
+    endpoints: {
+      auth: "/api/auth",
+      movies: "/api/movies",
+      watchlist: "/api/watchlist"
+    }
+  });
+});
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error("ERROR:", err);
