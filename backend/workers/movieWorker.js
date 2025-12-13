@@ -2,12 +2,14 @@ const Queue = require('bull');
 const Movie = require('../models/Movie');
 require('dotenv').config();
 
-// Create Bull Queue
 const movieQueue = new Queue('movie-processing', {
     redis: {
-        host: process.env.REDIS_HOST || '127.0.0.1',
-        port: process.env.REDIS_PORT || 6379,
-        password: process.env.REDIS_PASSWORD || undefined
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT),
+        password: process.env.REDIS_PASSWORD,
+        tls: process.env.REDIS_TLS === 'true' ? {} : undefined, // Upstash needs TLS
+        maxRetriesPerRequest: 3,
+        enableOfflineQueue: false
     }
 });
 
