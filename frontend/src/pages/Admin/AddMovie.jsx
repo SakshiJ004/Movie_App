@@ -985,7 +985,9 @@ export default function AddMovie() {
                 }}
               />
             </Paper>
+          </Grid>
 
+          <Grid item xs={12} md={6}>
             <Paper elevation={3} sx={{ p: 3, bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 2 }}>
               <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 3 }}>
                 💰 Financial Info
