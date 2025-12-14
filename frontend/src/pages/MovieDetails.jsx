@@ -166,18 +166,6 @@ export default function MovieDetails() {
             <Button sx={{ color: 'white', textTransform: 'none' }}>
               Watchlist
             </Button>
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: '#f59e0b',
-                color: 'black',
-                fontWeight: 600,
-                textTransform: 'none',
-                '&:hover': { bgcolor: '#d97706' }
-              }}
-            >
-              Sign In
-            </Button>
           </Box>
         </Box>
       </Box>
