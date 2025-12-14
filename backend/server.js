@@ -10,7 +10,17 @@ const watchlistRoutes = require("./routes/watchlistRoutes")
 const app = express();
 
 // Middleware
-app.use(cors());
+// Middleware - CORS Configuration
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://movie-app-eight-topaz.vercel.app'  // Your Vercel URL
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Connect MongoDB
@@ -21,16 +31,18 @@ app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
 app.use("/api/watchlist", watchlistRoutes)
 
+// Root route
 app.get("/", (req, res) => {
   res.json({
     message: "Movie App API is running",
-    status: "active",
-    endpoints: {
-      auth: "/api/auth",
-      movies: "/api/movies",
-      watchlist: "/api/watchlist"
-    }
+    status: "healthy",
+    timestamp: new Date().toISOString()
   });
+});
+
+// Health check route
+app.get("/health", (req, res) => {
+  res.json({ status: "OK" });
 });
 
 // Global error handler
