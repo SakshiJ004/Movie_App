@@ -11,6 +11,7 @@ import AllMovies from "./pages/Admin/AllMovies";
 import EditMovie from "./pages/Admin/EditMovie";
 import Register from "./pages/Register";
 import Watchlist from "./pages/Watchlist";
+import Dashboard from "./pages/Admin/Dashboard";
 
 export default function App() {
   return (
@@ -24,6 +25,14 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/tmdb/:id" element={<MovieDetails />} />
         <Route path="/movie/:id" element={<DBMovieDetails />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute adminOnly={true}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/add"
           element={

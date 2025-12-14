@@ -79,6 +79,30 @@ export default function Register() {
         return Object.keys(newErrors).length === 0;
     };
 
+    // const submit = async () => {
+    //     if (!validate()) return;
+
+    //     setLoading(true);
+    //     setServerError("");
+
+    //     try {
+    //         const res = await api.post("/auth/register", {
+    //             name: data.name,
+    //             email: data.email,
+    //             password: data.password,
+    //         });
+    //         login(res.data.token, res.data.user);
+    //         navigate("/");
+    //     } catch (err) {
+    //         setServerError(
+    //             err.response?.data?.message || "Registration failed. Please try again."
+    //         );
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
     const submit = async () => {
         if (!validate()) return;
 
@@ -89,19 +113,24 @@ export default function Register() {
             const res = await api.post("/auth/register", {
                 name: data.name,
                 email: data.email,
-                password: data.password,
+                password: data.password
             });
             login(res.data.token, res.data.user);
             navigate("/");
         } catch (err) {
-            setServerError(
-                err.response?.data?.message || "Registration failed. Please try again."
-            );
+            // Better error messages
+            if (err.response?.status === 400) {
+                setServerError("User already exists with this email");
+            } else if (err.response?.data?.message) {
+                setServerError(err.response.data.message);
+            } else {
+                setServerError("Registration failed. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
     };
-
+    
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
             submit();

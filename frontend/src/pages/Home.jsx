@@ -78,28 +78,24 @@ export default function Home() {
       });
       setTmdbGenresMap(genreMap);
 
-      let allMovies = [];
-      for (let page = 1; page <= 10; page++) {
-        const res = await axios.get(
-          `https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_KEY}&language=en-US&page=${page}`
-        );
+      // CHANGED: Only fetch 1 page at a time
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_KEY}&language=en-US&page=1`
+      );
 
-        const formatted = res.data.results.map((m) => ({
-          _id: `tmdb-${m.id}`,
-          id: m.id, // Keep the original TMDB ID
-          title: m.title,
-          description: m.overview,
-          poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null,
-          rating: m.vote_average,
-          releaseDate: m.release_date,
-          duration: null,
-          genres: (m.genre_ids || []).map((id) => genreMap[id]).filter(Boolean),
-        }));
+      const formatted = res.data.results.map((m) => ({
+        _id: `tmdb-${m.id}`,
+        id: m.id,
+        title: m.title,
+        description: m.overview,
+        poster: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : null,
+        rating: m.vote_average,
+        releaseDate: m.release_date,
+        duration: null,
+        genres: (m.genre_ids || []).map((id) => genreMap[id]).filter(Boolean),
+      }));
 
-        allMovies = [...allMovies, ...formatted];
-      }
-
-      setTopRated(allMovies);
+      setTopRated(formatted);
     } catch (error) {
       console.error("Error fetching TMDB movies:", error);
     } finally {
@@ -532,64 +528,64 @@ export default function Home() {
             </Box>
           )}
 
-      {/* Sidebar */}
-      <Box sx={{ width: 320, flexShrink: 0 }}>
-        <Box sx={{
-          bgcolor: '#1e293b',
-          borderRadius: 2,
-          p: 2,
-          mb: 2,
-          border: '1px solid #334155'
-        }}>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
-            Chart insights
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography sx={{ color: '#94a3b8' }}>
-              Average IMDb rating
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <StarIcon sx={{ fontSize: 16, color: '#f59e0b' }} />
-              <Typography sx={{ color: 'white', fontWeight: 600 }}>
-                {avgRating}
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        <Box sx={{
-          bgcolor: '#1e293b',
-          borderRadius: 2,
-          p: 2,
-          border: '1px solid #334155'
-        }}>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
-            More to explore
-          </Typography>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
-              Popular charts
-            </Typography>
+          {/* Sidebar */}
+          <Box sx={{ width: 320, flexShrink: 0 }}>
             <Box sx={{
-              color: '#94a3b8',
+              bgcolor: '#1e293b',
+              borderRadius: 2,
               p: 2,
-              bgcolor: '#0f172a',
-              borderRadius: 1
+              mb: 2,
+              border: '1px solid #334155'
             }}>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                Switch between tabs to explore:
+              <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                Chart insights
               </Typography>
-              <Box component="ul" sx={{ mt: 1, pl: 2, '& li': { mb: 0.5 } }}>
-                <li>• TMDB Top Rated Movies</li>
-                <li>• Movie Collection</li>
-                <li>• Filter by genres</li>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography sx={{ color: '#94a3b8' }}>
+                  Average IMDb rating
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <StarIcon sx={{ fontSize: 16, color: '#f59e0b' }} />
+                  <Typography sx={{ color: 'white', fontWeight: 600 }}>
+                    {avgRating}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{
+              bgcolor: '#1e293b',
+              borderRadius: 2,
+              p: 2,
+              border: '1px solid #334155'
+            }}>
+              <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                More to explore
+              </Typography>
+
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
+                  Popular charts
+                </Typography>
+                <Box sx={{
+                  color: '#94a3b8',
+                  p: 2,
+                  bgcolor: '#0f172a',
+                  borderRadius: 1
+                }}>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    Switch between tabs to explore:
+                  </Typography>
+                  <Box component="ul" sx={{ mt: 1, pl: 2, '& li': { mb: 0.5 } }}>
+                    <li>• TMDB Top Rated Movies</li>
+                    <li>• Movie Collection</li>
+                    <li>• Filter by genres</li>
+                  </Box>
+                </Box>
               </Box>
             </Box>
           </Box>
         </Box>
-      </Box>
-    </Box>
       </Box >
     </Box >
   );

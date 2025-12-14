@@ -97,6 +97,25 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // const submit = async () => {
+  //   if (!validate()) return;
+
+  //   setLoading(true);
+  //   setServerError("");
+
+  //   try {
+  //     const res = await api.post("/auth/login", data);
+  //     login(res.data.token, res.data.user);
+  //     navigate("/");
+  //   } catch (err) {
+  //     setServerError(
+  //       err.response?.data?.message || "Login failed. Please try again."
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const submit = async () => {
     if (!validate()) return;
 
@@ -108,9 +127,16 @@ export default function Login() {
       login(res.data.token, res.data.user);
       navigate("/");
     } catch (err) {
-      setServerError(
-        err.response?.data?.message || "Login failed. Please try again."
-      );
+      // Better error messages
+      if (err.response?.status === 401) {
+        setServerError("Invalid email or password. Please check your credentials.");
+      } else if (err.response?.status === 400) {
+        setServerError("Please enter valid email and password.");
+      } else if (err.response?.data?.message) {
+        setServerError(err.response.data.message);
+      } else {
+        setServerError("Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

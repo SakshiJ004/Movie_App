@@ -26,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Dashboard as DashboardIcon } from "@mui/icons-material";
 
 export default function Navbar() {
   const { token, user, logout } = useContext(AuthContext);
@@ -132,7 +133,7 @@ export default function Navbar() {
         {/* Right Side */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexShrink: 0 }}>
           {/* +Movies Dropdown (Only for Admin) */}
-          {user?.role === "admin" && (
+          {/* {user?.role === "admin" && (
             <>
               <Button
                 onMouseEnter={handleMenuOpen}
@@ -193,6 +194,106 @@ export default function Navbar() {
                     <VideoLibraryIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="All Movies" />
+                </MenuItem>
+              </Menu>
+            </>
+          )} */}
+          {/* Admin Menu - Enhanced */}
+          {user?.role === "admin" && (
+            <>
+              <Button
+                onMouseEnter={handleMenuOpen}
+                onClick={handleMenuOpen}
+                startIcon={<AddIcon />}
+                sx={{
+                  bgcolor: "#f59e0b",
+                  color: "black",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  px: 3,
+                  borderRadius: 2,
+                  "&:hover": { bgcolor: "#d97706" },
+                }}
+              >
+                Admin
+              </Button>
+
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleMenuClose}
+                TransitionComponent={Fade}
+                MenuListProps={{
+                  onMouseLeave: handleMenuClose,
+                  sx: { bgcolor: "#1e293b", border: "1px solid #334155" },
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    bgcolor: "#1e293b",
+                    color: "white",
+                    borderRadius: 2,
+                    boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+                    minWidth: 220,
+                  },
+                }}
+              >
+                <MenuItem
+                  component={Link}
+                  to="/admin/dashboard"
+                  onClick={handleMenuClose}
+                  sx={{
+                    "&:hover": { bgcolor: "#334155" },
+                    borderBottom: "1px solid #334155",
+                    py: 1.5
+                  }}
+                >
+                  <ListItemIcon sx={{ color: "#10b981" }}>
+                    <DashboardIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Dashboard"
+                    secondary="Overview & Stats"
+                    secondaryTypographyProps={{
+                      sx: { color: "#64748b", fontSize: "0.75rem" }
+                    }}
+                  />
+                </MenuItem>
+
+                <MenuItem
+                  component={Link}
+                  to="/admin/add"
+                  onClick={handleMenuClose}
+                  sx={{ "&:hover": { bgcolor: "#334155" }, py: 1.5 }}
+                >
+                  <ListItemIcon sx={{ color: "#f59e0b" }}>
+                    <PlaylistAddIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Add Movie"
+                    secondary="Create new entry"
+                    secondaryTypographyProps={{
+                      sx: { color: "#64748b", fontSize: "0.75rem" }
+                    }}
+                  />
+                </MenuItem>
+
+                <MenuItem
+                  component={Link}
+                  to="/admin/all-movies"
+                  onClick={handleMenuClose}
+                  sx={{ "&:hover": { bgcolor: "#334155" }, py: 1.5 }}
+                >
+                  <ListItemIcon sx={{ color: "#3b82f6" }}>
+                    <VideoLibraryIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="All Movies"
+                    secondary="Manage collection"
+                    secondaryTypographyProps={{
+                      sx: { color: "#64748b", fontSize: "0.75rem" }
+                    }}
+                  />
                 </MenuItem>
               </Menu>
             </>
