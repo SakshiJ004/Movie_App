@@ -210,7 +210,6 @@ export default function AllMovies() {
       setAllGenres([...genres]);
     } catch (error) {
       console.error("Error loading movies:", error);
-      toast.error("Failed to load movies");
     }
   };
 
@@ -255,7 +254,7 @@ export default function AllMovies() {
       setDeleteId(null);
       loadMovies();
     } catch (error) {
-      toast.error("Failed to delete movie");
+      toast.error("Failed to delete movie")
       console.error("Error deleting movie:", error);
     }
   };

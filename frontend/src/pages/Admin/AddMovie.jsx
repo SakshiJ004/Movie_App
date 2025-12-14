@@ -737,7 +737,7 @@ export default function AddMovie() {
       toast.success("✅ Movie added successfully!");
 
       setTimeout(() => {
-        navigate('/admin/all-movies', { replace: true });
+        navigate('/admin/all-movies');
       }, 1500);
     } catch (err) {
       toast.error(err.response?.data?.message || "❌ Failed to add movie");
