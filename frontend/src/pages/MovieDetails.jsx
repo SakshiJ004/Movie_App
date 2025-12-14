@@ -163,7 +163,11 @@ export default function MovieDetails() {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button sx={{ color: 'white', textTransform: 'none' }}>
+            <Button
+              component={Link}
+              to="/watchlist"
+              sx={{ color: 'white', textTransform: 'none' }}
+            >
               Watchlist
             </Button>
           </Box>
