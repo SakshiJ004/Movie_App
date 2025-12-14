@@ -19,6 +19,7 @@ const TMDB_KEY = import.meta.env.VITE_TMDB_KEY;
 export default function Home() {
   const [topRated, setTopRated] = useState([]);
   const [allAdminMovies, setAllAdminMovies] = useState([]);
+  const [totalMoviesCount, setTotalMoviesCount] = useState(0)
   const [selectedGenre, setSelectedGenre] = useState("");
   const [adminGenres, setAdminGenres] = useState([]);
   const [tmdbGenresMap, setTmdbGenresMap] = useState({});
@@ -113,7 +114,8 @@ export default function Home() {
       });
       const movies = res.data.movies || [];
       setAllAdminMovies(movies);
-      setTotalPages(res.data.totalPages || 1);  // ADD THIS
+      setTotalPages(res.data.totalPages || 1);
+      setTotalMoviesCount(res.data.total || 0);
 
       const g = new Set();
       movies.forEach((m) => m.genres?.forEach((genre) => g.add(genre)));
@@ -306,8 +308,8 @@ export default function Home() {
                 }}
               >
                 {user?.role === "admin"
-                  ? `Database Movies (${allAdminMovies.length})`
-                  : `My Collection (${userWatchlistMovies.length})` // Use userWatchlistMovies.length
+                  ? `Database Movies (${totalMoviesCount})`
+                  : `My Collection (${userWatchlistMovies.length})`
                 }
               </Button>
             </Box>

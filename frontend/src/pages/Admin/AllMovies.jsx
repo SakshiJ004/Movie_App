@@ -167,6 +167,7 @@ import {
 } from "@mui/icons-material";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function AllMovies() {
   const [movies, setMovies] = useState([]);
@@ -249,9 +250,11 @@ export default function AllMovies() {
   const confirmDelete = async () => {
     try {
       await api.delete(`/movies/${deleteId}`);
+      toast.success("Movie deleted successfully!");
       setDeleteId(null);
       loadMovies();
     } catch (error) {
+      toast.error("Failed to delete movie");
       console.error("Error deleting movie:", error);
     }
   };

@@ -220,6 +220,7 @@ import {
 } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { toast } from "react-toastify";
 
 export default function EditMovie() {
   const { id } = useParams();
@@ -383,18 +384,17 @@ export default function EditMovie() {
 
   const saveChanges = async () => {
     if (!movie.title) {
-      setError("Title is required");
+      toast.error("Title is required");
       return;
     }
 
     try {
       setLoading(true);
-      setError("");
       await api.put(`/movies/${movie._id}`, movie);
-      setSuccess("Movie updated successfully!");
+      toast.success("Movie updated successfully!");
       setTimeout(() => navigate("/admin/all-movies"), 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Error updating movie");
+      toast.error("Error updating movie");
     } finally {
       setLoading(false);
     }

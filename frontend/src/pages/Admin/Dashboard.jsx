@@ -17,6 +17,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -39,20 +40,57 @@ export default function Dashboard() {
         try {
             setLoading(true);
 
-            // Fetch analytics from backend
-            const res = await api.get("/analytics/dashboard");
+            // Try to fetch from analytics endpoint first
+            try {
+                const res = await api.get("/analytics/dashboard");
+                setStats({
+                    totalMovies: res.data.totalMovies || 0,
+                    totalUsers: res.data.totalUsers || 0,
+                    averageRating: parseFloat(res.data.averageRating) || 0,
+                    topRatedMovies: res.data.topRated || [],
+                    recentMovies: res.data.recentMovies || []
+                });
+                return; // Exit if successful
+            } catch (err) {
+                console.log("Analytics endpoint not available, using fallback");
+            }
+
+            // Fallback: Fetch all data manually
+            const moviesRes = await api.get("/movies", { params: { limit: 1000 } });
+            const movies = moviesRes.data.movies || [];
+
+            // Try to get user count
+            let userCount = 0;
+            try {
+                const usersRes = await api.get("/users/count"); // You need to create this endpoint
+                userCount = usersRes.data.count;
+            } catch (err) {
+                console.log("User count endpoint not available");
+            }
+
+            const avgRating = movies.length > 0
+                ? movies.reduce((sum, m) => sum + (m.rating || 0), 0) / movies.length
+                : 0;
+
+            const topRated = [...movies]
+                .filter(m => m.rating) // Only movies with ratings
+                .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+                .slice(0, 5);
+
+            const recent = [...movies]
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 5);
 
             setStats({
-                totalMovies: res.data.totalMovies,
-                totalUsers: res.data.totalUsers,
-                averageRating: parseFloat(res.data.averageRating),
-                topRatedMovies: res.data.topRated,
-                recentMovies: res.data.recentMovies
+                totalMovies: movies.length,
+                totalUsers: userCount,
+                averageRating: avgRating,
+                topRatedMovies: topRated,
+                recentMovies: recent
             });
         } catch (error) {
             console.error("Error loading dashboard:", error);
-            // Fallback to previous method if analytics endpoint doesn't exist
-            loadDashboardDataFallback();
+            toast.error("Failed to load dashboard data");
         } finally {
             setLoading(false);
         }

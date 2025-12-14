@@ -109,14 +109,18 @@ export default function Search() {
 
     return () => clearTimeout(timer);
   }, [query, selectedGenre, yearFrom, yearTo, minRating]);
+
   const performSearch = async (searchQuery) => {
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim()) {
+      setResults({ db: [], tmdb: [] });
+      return;
+    }
     setLoading(true);
 
     try {
       const params = {
         q: searchQuery,
-        source: activeTab === 1 ? "db" : activeTab === 2 ? "tmdb" : "all",
+        source: "all",
       };
 
       if (selectedGenre) params.genre = selectedGenre;
@@ -134,14 +138,15 @@ export default function Search() {
   };
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
-    if (query) performSearch(query);
   };
+
   const clearFilters = () => {
     setSelectedGenre("");
     setYearFrom("");
     setYearTo("");
     setMinRating("");
   };
+  
   const allResults = [...results.db, ...results.tmdb];
   const displayResults =
     activeTab === 0
