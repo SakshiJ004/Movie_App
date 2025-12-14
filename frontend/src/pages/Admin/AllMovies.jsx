@@ -210,6 +210,7 @@ export default function AllMovies() {
       setAllGenres([...genres]);
     } catch (error) {
       console.error("Error loading movies:", error);
+      toast.error("Failed to load movies");
     }
   };
 
