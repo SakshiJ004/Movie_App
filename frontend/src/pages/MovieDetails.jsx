@@ -24,6 +24,15 @@ import {
   Add
 } from "@mui/icons-material";
 
+const isTmdbMovie = !id.match(/^[0-9a-fA-F]{24}$/);
+
+const getImageUrl = (path, size = "w500") => {
+  if (!path) return "https://via.placeholder.com/300x450/333/666?text=No+Image";
+  if (path.startsWith("http")) return path;
+  return `https://image.tmdb.org/t/p/${size}${path}`;
+};
+
+
 const TMDB_KEY = import.meta.env.VITE_TMDB_KEY;
 
 export default function MovieDetails() {
@@ -38,9 +47,15 @@ export default function MovieDetails() {
   const loadMovie = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_KEY}&append_to_response=credits,videos`
-      );
+      let res;
+
+      if (isTmdbMovie) {
+        res = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_KEY}&append_to_response=credits,videos`
+        );
+      } else {
+        res = await api.get(`/movies/${id}`);
+      }
 
       setMovie(res.data);
       console.log("Movie data:", res.data);
@@ -115,8 +130,14 @@ export default function MovieDetails() {
     );
   }
 
-  const director = movie.credits?.crew?.find(c => c.job === "Director");
-  const cast = movie.credits?.cast?.slice(0, 10) || [];
+  const director = isTmdbMovie
+    ? movie.credits?.crew?.find(c => c.job === "Director")
+    : movie.director;
+
+  const cast = isTmdbMovie
+    ? movie.credits?.cast?.slice(0, 10)
+    : movie.cast || [];
+
   const trailer = movie.videos?.results?.find(v => v.type === "Trailer");
 
   return (
@@ -175,11 +196,12 @@ export default function MovieDetails() {
       </Box>
 
       {/* Backdrop */}
-      {movie.backdrop_path && (
+      {(isTmdbMovie ? movie.backdrop_path : movie.backdrop) && (
         <Box sx={{
           position: 'relative',
           height: 400,
-          background: `linear-gradient(to bottom, rgba(15, 23, 42, 0.3), #0f172a), url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+          background: `linear-gradient(to bottom, rgba(15, 23, 42, 0.3), #0f172a),
+url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original")})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }} />
@@ -197,10 +219,7 @@ export default function MovieDetails() {
             }}>
               <CardMedia
                 component="img"
-                image={movie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                  : 'https://via.placeholder.com/500x750/333/666?text=No+Image'
-                }
+                image={getImageUrl(isTmdbMovie ? movie.poster_path : movie.poster)}
                 alt={movie.title}
                 sx={{ width: '100%' }}
               />
@@ -475,10 +494,7 @@ export default function MovieDetails() {
                         }}
                       >
                         <img
-                          src={person.profile_path
-                            ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
-                            : 'https://via.placeholder.com/185x278/333/666?text=No+Image'
-                          }
+                          src={getImageUrl(person.profile_path || person.profilePath, "w185")}
                           alt={person.name}
                           style={{ width: '100%', height: 200, objectFit: 'cover' }}
                         />
