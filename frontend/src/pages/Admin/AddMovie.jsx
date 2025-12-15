@@ -716,33 +716,83 @@ export default function AddMovie() {
   };
 
   const submit = async () => {
-    if (!movie.title) {
-      toast.error("Title is required");
-      return;
-    }
+  if (!movie.title.trim()) {
+    toast.error("Title is required");
+    return;
+  }
 
-    try {
-      const payload = {
-        ...movie,
-        id: movie.id ? Number(movie.id) : undefined,
-        runtime: movie.runtime ? Number(movie.runtime) : undefined,
-        rating: movie.rating ? Number(movie.rating) : undefined,
-        voteCount: movie.voteCount ? Number(movie.voteCount) : undefined,
-        popularity: movie.popularity ? Number(movie.popularity) : undefined,
-        budget: movie.budget ? Number(movie.budget) : undefined,
-        revenue: movie.revenue ? Number(movie.revenue) : undefined,
-      };
+  try {
+    const payload = {
+      ...movie,
 
-      await api.post("/movies", payload);
-      toast.success("✅ Movie added successfully!");
-      navigate('/admin/all-movies', {
-        replace: true,
-        state: { refresh: true } // Pass refresh signal
-      });
-    } catch (err) {
-      toast.error(err.response?.data?.message || "❌ Failed to add movie");
-    }
-  };
+      // Numbers
+      id: movie.id ? Number(movie.id) : undefined,
+      runtime: movie.runtime ? Number(movie.runtime) : undefined,
+      rating: movie.rating ? Number(movie.rating) : undefined,
+      voteCount: movie.voteCount ? Number(movie.voteCount) : undefined,
+      popularity: movie.popularity ? Number(movie.popularity) : undefined,
+      budget: movie.budget ? Number(movie.budget) : undefined,
+      revenue: movie.revenue ? Number(movie.revenue) : undefined,
+
+      // ✅ CAST – ensure array of objects
+      cast: movie.cast.map((c, index) => ({
+        id: index + 1,
+        name: c.name,
+        character: c.character || "",
+        profilePath: c.profilePath || "",
+        order: index,
+        gender: 0
+      })),
+
+      // ✅ CREW
+      crew: movie.crew.map((c, index) => ({
+        id: index + 1,
+        name: c.name,
+        job: c.job || "",
+        department: c.department || "",
+        profilePath: c.profilePath || ""
+      })),
+
+      // ✅ PRODUCTION COMPANIES
+      productionCompanies: movie.productionCompanies.map((c, index) => ({
+        id: index + 1,
+        name: c.name,
+        logo: c.logo || "",
+        originCountry: c.originCountry || ""
+      })),
+
+      // ✅ TRAILER – send ONLY if key exists
+      trailer: movie.trailer?.key
+        ? {
+            key: movie.trailer.key,
+            name: movie.trailer.name || "Official Trailer",
+            site: movie.trailer.site || "YouTube",
+            type: movie.trailer.type || "Trailer",
+            official: true
+          }
+        : undefined,
+
+      // ✅ VIDEOS – remove empty ones
+      videos: movie.videos.filter(v => v.key).map((v, index) => ({
+        id: index + 1,
+        key: v.key,
+        name: v.name || "Video",
+        site: v.site || "YouTube",
+        type: v.type || "Trailer",
+        official: true
+      }))
+    };
+
+    await api.post("/movies", payload);
+
+    toast.success("✅ Movie added successfully!");
+    navigate("/admin/all-movies", { replace: true, state: { refresh: true } });
+
+  } catch (err) {
+    toast.error(err.response?.data?.message || "❌ Failed to add movie");
+  }
+};
+
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: '#0f172a', py: 4 }}>
