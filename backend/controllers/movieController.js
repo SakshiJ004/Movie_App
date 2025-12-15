@@ -194,90 +194,26 @@ exports.updateMovie = async (req, res) => {
 };
 
 
-
+const Movie = require("../models/Movie");
 
 exports.deleteMovie = async (req, res) => {
   try {
-    // Add to queue
-    const job = await deleteMovieInQueue(req.params.id);
+    const movie = await Movie.findByIdAndDelete(req.params.id);
 
-    res.json({
-      message: "Movie deletion queued",
-      jobId: job.id,
-      status: "processing"
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.status(200).json({
+      message: "Movie deleted successfully",
+      id: req.params.id
     });
   } catch (err) {
     console.error("Error deleting movie:", err);
     res.status(500).json({ message: err.message });
   }
 };
-// exports.addMovie = async (req, res) => {
-//   try {
-//     // Validate required field
-//     if (!req.body.title) {
-//       return res.status(400).json({ message: "Title is required" });
-//     }
 
-//     // Create the movie directly
-//     const movie = await Movie.create(req.body);
-
-//     res.status(201).json({
-//       message: "Movie added successfully",
-//       movie
-//     });
-//   } catch (err) {
-//     console.error("Error adding movie:", err);
-//     res.status(500).json({
-//       message: "Failed to add movie",
-//       error: err.message
-//     });
-//   }
-// };
-
-/* ----------------------------------------------
-   PUT /movies/:id
-   Update a Movie (Admin)
----------------------------------------------- */
-// exports.updateMovie = async (req, res) => {
-//   try {
-//     const movie = await Movie.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       { new: true }
-//     );
-
-//     if (!movie) {
-//       return res.status(404).json({ message: "Movie not found" });
-//     }
-
-//     res.json({
-//       message: "Movie updated successfully",
-//       movie
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
-/* ----------------------------------------------
-   DELETE /movies/:id
-   Remove a Movie (Admin)
----------------------------------------------- */
-// exports.deleteMovie = async (req, res) => {
-//   try {
-//     const movie = await Movie.findByIdAndDelete(req.params.id);
-
-//     if (!movie) {
-//       return res.status(404).json({ message: "Movie not found" });
-//     }
-
-//     res.json({
-//       message: "Movie deleted successfully"
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
 
 /* ----------------------------------------------
    POST /movies/import
