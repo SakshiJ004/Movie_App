@@ -1,15 +1,72 @@
+// const Queue = require('bull');
+// require('dotenv').config();
+
+// const movieQueue = new Queue('movie-processing', {
+//     redis: {
+//         host: process.env.REDIS_HOST,
+//         port: parseInt(process.env.REDIS_PORT),
+//         password: process.env.REDIS_PASSWORD,
+//         tls: process.env.REDIS_TLS === 'true' ? {} : undefined, // Upstash needs TLS
+//         maxRetriesPerRequest: 3,
+//         enableOfflineQueue: false
+//     }
+// });
+
+// // Add movie to queue
+// exports.addMovieToQueue = async (movieData) => {
+//     return await movieQueue.add('ADD_MOVIE', {
+//         action: 'ADD_MOVIE',
+//         data: movieData
+//     }, {
+//         attempts: 3,
+//         backoff: {
+//             type: 'exponential',
+//             delay: 2000
+//         }
+//     });
+// };
+
+// // Update movie in queue
+// exports.updateMovieInQueue = async (movieId, movieData) => {
+//     return await movieQueue.add('UPDATE_MOVIE', {
+//         action: 'UPDATE_MOVIE',
+//         movieId,
+//         data: movieData
+//     });
+// };
+
+// // Delete movie in queue
+// exports.deleteMovieInQueue = async (movieId) => {
+//     return await movieQueue.add('DELETE_MOVIE', {
+//         action: 'DELETE_MOVIE',
+//         movieId
+//     });
+// };
+
+// module.exports.movieQueue = movieQueue;
+
+
 const Queue = require('bull');
 require('dotenv').config();
 
-const movieQueue = new Queue('movie-processing', {
-    redis: {
+// Redis configuration
+const redisConfig = process.env.REDIS_TLS === 'true'
+    ? {
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT),
         password: process.env.REDIS_PASSWORD,
-        tls: process.env.REDIS_TLS === 'true' ? {} : undefined, // Upstash needs TLS
-        maxRetriesPerRequest: 3,
-        enableOfflineQueue: false
+        tls: {
+            rejectUnauthorized: false
+        }
     }
+    : {
+        host: process.env.REDIS_HOST || '127.0.0.1',
+        port: parseInt(process.env.REDIS_PORT) || 6379,
+        password: process.env.REDIS_PASSWORD || undefined
+    };
+
+const movieQueue = new Queue('movie-processing', {
+    redis: redisConfig
 });
 
 // Add movie to queue

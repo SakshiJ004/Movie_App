@@ -166,7 +166,7 @@ import {
   KeyboardArrowDown
 } from "@mui/icons-material";
 import api from "../../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function AllMovies() {
@@ -184,9 +184,34 @@ export default function AllMovies() {
 
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   useEffect(() => {
     loadMovies();
   }, [currentPage]);
+
+  useEffect(() => {
+    if (location.state?.refresh) {
+      loadMovies();
+      // Clear the state
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    // Refresh movies list when component becomes visible
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadMovies();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   useEffect(() => {
     applyFilters();
