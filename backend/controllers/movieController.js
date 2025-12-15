@@ -137,19 +137,26 @@ exports.addMovie = async (req, res) => {
 
 exports.updateMovie = async (req, res) => {
   try {
-    // Add to queue
-    const job = await updateMovieInQueue(req.params.id, req.body);
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
 
     res.json({
-      message: "Movie update queued",
-      jobId: job.id,
-      status: "processing"
+      message: "Movie updated successfully",
+      movie
     });
   } catch (err) {
-    console.error("Error updating movie:", err);
+    console.error("Update error:", err);
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.deleteMovie = async (req, res) => {
   try {
