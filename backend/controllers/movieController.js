@@ -137,7 +137,6 @@ exports.addMovie = async (req, res) => {
 
 exports.updateMovie = async (req, res) => {
   try {
-    // Only update the main fields, remove cast/crew/videos queue if any
     const {
       title,
       tagline,
@@ -150,7 +149,11 @@ exports.updateMovie = async (req, res) => {
       budget,
       revenue,
       genres,
-      director
+      director,
+      cast,
+      crew,
+      videos,
+      productionCompanies
     } = req.body;
 
     const updateData = {
@@ -165,7 +168,11 @@ exports.updateMovie = async (req, res) => {
       budget,
       revenue,
       genres,
-      director
+      director,
+      cast,
+      crew,
+      videos,
+      productionCompanies
     };
 
     const movie = await Movie.findByIdAndUpdate(
@@ -174,9 +181,7 @@ exports.updateMovie = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!movie) {
-      return res.status(404).json({ message: "Movie not found" });
-    }
+    if (!movie) return res.status(404).json({ message: "Movie not found" });
 
     res.json({
       message: "Movie updated successfully",
@@ -187,6 +192,7 @@ exports.updateMovie = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 
 
