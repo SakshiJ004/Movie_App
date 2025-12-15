@@ -114,9 +114,6 @@ export default function DBMovieDetails() {
               Back
             </Button>
           </Box>
-          <Button variant="contained" sx={{ bgcolor: '#f59e0b', color: 'black', fontWeight: 600, '&:hover': { bgcolor: '#d97706' } }}>
-            Sign In
-          </Button>
         </Box>
       </Box>
 
