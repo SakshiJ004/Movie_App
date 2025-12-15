@@ -7,36 +7,36 @@ const movieSchema = new mongoose.Schema({
   originalTitle: String,
   tagline: String,
   description: String,
-  
+
   // Media
   poster: String,
   backdrop: String,
-  
+
   // Ratings & Popularity
   rating: Number,
   voteCount: Number,
   popularity: Number,
-  
+
   // Release Info
   releaseDate: String,
   status: String, // Released, Post Production, etc.
-  
+
   // Duration
   runtime: Number, // in minutes
   duration: String, // formatted like "2h 30m"
-  
+
   // Classification
   adult: Boolean,
   genres: [String],
-  
+
   // Financial
   budget: Number,
   revenue: Number,
-  
+
   // External IDs
   imdbId: String,
   homepage: String,
-  
+
   // Production
   productionCompanies: [{
     id: Number,
@@ -52,7 +52,7 @@ const movieSchema = new mongoose.Schema({
     iso: String,
     name: String
   }],
-  
+
   // Credits
   director: {
     id: Number,
@@ -60,7 +60,14 @@ const movieSchema = new mongoose.Schema({
     profilePath: String,
     department: String
   },
-  cast: [String],
+  cast: [{
+    id: Number,
+    name: String,
+    character: String,
+    profilePath: String,
+    order: Number,
+    gender: Number
+  }],
   crew: [{
     id: Number,
     name: String,
@@ -68,7 +75,7 @@ const movieSchema = new mongoose.Schema({
     department: String,
     profilePath: String
   }],
-  
+
   // Videos
   trailer: {
     id: String,
@@ -86,7 +93,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     official: Boolean
   }],
-  
+
   // Metadata
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
