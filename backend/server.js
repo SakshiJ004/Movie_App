@@ -30,6 +30,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);
 app.use("/api/watchlist", watchlistRoutes)
+app.use("/api/analytics", require("./routes/analyticsRoutes"))
 
 // Root route
 app.get("/", (req, res) => {
