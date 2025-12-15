@@ -60,14 +60,7 @@ const movieSchema = new mongoose.Schema({
     profilePath: String,
     department: String
   },
-  cast: [{
-    id: Number,
-    name: String,
-    character: String,
-    profilePath: String,
-    order: Number,
-    gender: Number
-  }],
+  cast: [String],
   crew: [{
     id: Number,
     name: String,
@@ -103,6 +96,7 @@ const movieSchema = new mongoose.Schema({
 
 // Index for better search performance
 movieSchema.index({ title: 'text', description: 'text' });
+movieSchema.index({ id: 1 }); // FIXED: Changed from tmdbId to id
 movieSchema.index({ rating: -1 });
 movieSchema.index({ releaseDate: -1 });
 

@@ -123,23 +123,17 @@ exports.searchMovies = async (req, res) => {
 
 exports.addMovie = async (req, res) => {
   try {
-    if (!req.body.title) {
-      return res.status(400).json({ message: "Title is required" });
-    }
+    const movie = await Movie.create(req.body);
 
-    // Add to queue instead of direct creation
-    const job = await addMovieToQueue(req.body);
-
-    res.status(202).json({
-      message: "Movie added to processing queue",
-      jobId: job.id,
-      status: "processing"
+    res.status(201).json({
+      message: "Movie added successfully",
+      movie,
     });
   } catch (err) {
-    console.error("Error adding movie to queue:", err);
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.updateMovie = async (req, res) => {
   try {
