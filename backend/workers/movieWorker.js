@@ -61,7 +61,6 @@
 // console.log('Movie Worker is running...');
 
 // module.exports = movieQueue;
-
 require("dotenv").config();
 const mongoose = require("mongoose");
 const movieQueue = require("../queues/movieQueue");
@@ -81,7 +80,7 @@ movieQueue.process(async (job) => {
     switch (action) {
         case "ADD_MOVIE":
             const movie = await Movie.create(data);
-            console.log("✅ Movie inserted:", movie.title);
+            console.log("✅ Movie saved:", movie.title);
             return movie;
 
         case "UPDATE_MOVIE":

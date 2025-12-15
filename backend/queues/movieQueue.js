@@ -1,17 +1,9 @@
 const Queue = require("bull");
-const IORedis = require("ioredis");
 
-const redisOptions = {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-    tls: process.env.REDIS_TLS === "true" ? {} : undefined,
-    maxRetriesPerRequest: null,
-    enableOfflineQueue: false,
-};
+if (!process.env.REDIS_URL) {
+    throw new Error("REDIS_URL is not defined in .env");
+}
 
-const movieQueue = new Queue("movie-processing", {
-    createClient: () => new IORedis(redisOptions),
-});
+const movieQueue = new Queue("movie-processing", process.env.REDIS_URL);
 
 module.exports = movieQueue;
