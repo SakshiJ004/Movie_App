@@ -45,35 +45,12 @@
 
 // module.exports.movieQueue = movieQueue;
 
-
-const Queue = require('bull');
-require('dotenv').config();
-
-// Redis configuration
-const redisConfig = process.env.REDIS_TLS === 'true'
-    ? {
-        host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT),
-        password: process.env.REDIS_PASSWORD,
-        tls: {
-            rejectUnauthorized: false
-        }
-    }
-    : {
-        host: process.env.REDIS_HOST || '127.0.0.1',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-        password: process.env.REDIS_PASSWORD || undefined
-    };
-
-const movieQueue = new Queue('movie-processing', {
-    redis: redisConfig
-});
-
+const movieQueue = require("../queues/movieQueue");
 
 exports.addMovieToQueue = (movieData) => {
     return movieQueue.add({
         action: "ADD_MOVIE",
-        data: movieData
+        data: movieData,
     });
 };
 
@@ -81,15 +58,13 @@ exports.updateMovieInQueue = (movieId, movieData) => {
     return movieQueue.add({
         action: "UPDATE_MOVIE",
         movieId,
-        data: movieData
+        data: movieData,
     });
 };
 
 exports.deleteMovieInQueue = (movieId) => {
     return movieQueue.add({
         action: "DELETE_MOVIE",
-        movieId
+        movieId,
     });
 };
-
-module.exports.movieQueue = movieQueue;
