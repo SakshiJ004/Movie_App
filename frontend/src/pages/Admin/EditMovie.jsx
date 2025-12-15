@@ -382,6 +382,24 @@ export default function EditMovie() {
     });
   };
 
+  // const saveChanges = async () => {
+  //   if (!movie.title) {
+  //     toast.error("Title is required");
+  //     return;
+  //   }
+
+  //   try {
+  //     setLoading(true);
+  //     await api.put(`/movies/${movie._id}`, movie);
+  //     toast.success("Movie updated successfully!");
+  //     setTimeout(() => navigate("/admin/all-movies"), 1500);
+  //   } catch (err) {
+  //     toast.error("Error updating movie");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const saveChanges = async () => {
     if (!movie.title) {
       toast.error("Title is required");
@@ -390,15 +408,38 @@ export default function EditMovie() {
 
     try {
       setLoading(true);
-      await api.put(`/movies/${movie._id}`, movie);
+
+      // Only send the fields that matter
+      const payload = {
+        title: movie.title,
+        tagline: movie.tagline,
+        description: movie.description,
+        releaseDate: movie.releaseDate,
+        runtime: movie.runtime,
+        rating: movie.rating,
+        poster: movie.poster,
+        backdrop: movie.backdrop,
+        budget: movie.budget,
+        revenue: movie.revenue,
+        genres: movie.genres,
+        director: movie.director,
+        cast: movie.cast,
+        crew: movie.crew,
+        videos: movie.videos,
+        productionCompanies: movie.productionCompanies,
+      };
+
+      await api.put(`/movies/${movie._id}`, payload);
       toast.success("Movie updated successfully!");
       setTimeout(() => navigate("/admin/all-movies"), 1500);
     } catch (err) {
+      console.error(err);
       toast.error("Error updating movie");
     } finally {
       setLoading(false);
     }
   };
+
 
   if (loading && !movie) {
     return (
