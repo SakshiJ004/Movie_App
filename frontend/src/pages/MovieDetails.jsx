@@ -31,11 +31,13 @@ export default function MovieDetails() {
   const navigate = useNavigate();
 
   const isTmdbMovie = !id.match(/^[0-9a-fA-F]{24}$/);
+
   const getImageUrl = (path, size = "w500") => {
-    if (!path) return "https://via.placeholder.com/300x450/333/666?text=No+Image";
+    if (!path || path === "undefined") return "https://via.placeholder.com/300x450/333/666?text=No+Image";
     if (path.startsWith("http")) return path;
     return `https://image.tmdb.org/t/p/${size}${path}`;
   };
+
   const [movie, setMovie] = useState(null);
   const [similar, setSimilar] = useState([]);
   const [loading, setLoading] = useState(true);
