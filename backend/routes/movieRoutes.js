@@ -12,6 +12,7 @@ const {
   getMovieById,
   getMovieByTmdbId,
   searchAllMovies,
+  importMovie,
 } = require("../controllers/movieController");
 
 
@@ -25,6 +26,7 @@ router.get("/movie/:id", getMovieByTmdbId);
 
 // ADMIN ONLY
 router.post("/", auth, allowRoles("admin"), addMovie);
+router.post("/import", auth, allowRoles("admin"), importMovie);
 router.put("/:id", auth, allowRoles("admin"), updateMovie);
 router.delete("/:id", auth, allowRoles("admin"), deleteMovie);
 

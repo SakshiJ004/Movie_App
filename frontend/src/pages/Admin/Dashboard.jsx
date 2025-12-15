@@ -361,6 +361,7 @@ import {
     Star,
     CalendarToday
 } from "@mui/icons-material";
+import api from "../../api/axios";
 
 // Mock API - replace with your actual API calls
 const mockApi = {
@@ -410,7 +411,7 @@ export default function Dashboard() {
     const loadDashboardData = async () => {
         try {
             setLoading(true);
-            const res = await mockApi.get("/analytics/dashboard");
+            const res = await api.get("/analytics/dashboard");
             setStats({
                 totalMovies: res.data.totalMovies || 0,
                 totalUsers: res.data.totalUsers || 0,

@@ -121,7 +121,12 @@ exports.searchMovies = async (req, res) => {
 ---------------------------------------------- */
 exports.addMovie = async (req, res) => {
   try {
-    // Direct database insertion (bypassing queue)
+    // Validate required field
+    if (!req.body.title) {
+      return res.status(400).json({ message: "Title is required" });
+    }
+
+    // Create the movie directly
     const movie = await Movie.create(req.body);
 
     res.status(201).json({
@@ -129,7 +134,11 @@ exports.addMovie = async (req, res) => {
       movie
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error adding movie:", err);
+    res.status(500).json({
+      message: "Failed to add movie",
+      error: err.message
+    });
   }
 };
 
