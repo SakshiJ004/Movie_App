@@ -121,13 +121,12 @@ exports.searchMovies = async (req, res) => {
 ---------------------------------------------- */
 exports.addMovie = async (req, res) => {
   try {
-    // Add to queue instead of direct insertion
-    const job = await addMovieToQueue(req.body);
+    // Direct database insertion (bypassing queue)
+    const movie = await Movie.create(req.body);
 
-    res.status(202).json({
-      message: "Movie is being added to the database",
-      jobId: job.id,
-      status: "queued"
+    res.status(201).json({
+      message: "Movie added successfully",
+      movie
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -140,12 +139,19 @@ exports.addMovie = async (req, res) => {
 ---------------------------------------------- */
 exports.updateMovie = async (req, res) => {
   try {
-    const job = await updateMovieInQueue(req.params.id, req.body);
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
 
-    res.status(202).json({
-      message: "Movie update is being processed",
-      jobId: job.id,
-      status: "queued"
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.json({
+      message: "Movie updated successfully",
+      movie
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -158,12 +164,14 @@ exports.updateMovie = async (req, res) => {
 ---------------------------------------------- */
 exports.deleteMovie = async (req, res) => {
   try {
-    const job = await deleteMovieInQueue(req.params.id);
+    const movie = await Movie.findByIdAndDelete(req.params.id);
 
-    res.status(202).json({
-      message: "Movie deletion is being processed",
-      jobId: job.id,
-      status: "queued"
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    res.json({
+      message: "Movie deleted successfully"
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

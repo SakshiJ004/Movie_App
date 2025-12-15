@@ -502,33 +502,33 @@ export default function Home() {
                 )}
               </Box>
             )}
+            {activeTab === "admin" && totalPages > 1 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={(e, page) => setCurrentPage(page)}
+                  color="primary"
+                  size="large"
+                  showFirstButton
+                  showLastButton
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      color: '#cbd5e1',
+                      borderColor: '#334155',
+                      '&:hover': { bgcolor: '#334155' }
+                    },
+                    '& .Mui-selected': {
+                      bgcolor: '#f59e0b !important',
+                      color: 'black',
+                      fontWeight: 'bold'
+                    }
+                  }}
+                />
+              </Box>
+            )}
           </Box>
 
-          {activeTab === "admin" && totalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={(e, page) => setCurrentPage(page)}
-                color="primary"
-                size="large"
-                showFirstButton
-                showLastButton
-                sx={{
-                  '& .MuiPaginationItem-root': {
-                    color: '#cbd5e1',
-                    borderColor: '#334155',
-                    '&:hover': { bgcolor: '#334155' }
-                  },
-                  '& .Mui-selected': {
-                    bgcolor: '#f59e0b !important',
-                    color: 'black',
-                    fontWeight: 'bold'
-                  }
-                }}
-              />
-            </Box>
-          )}
 
           {/* Sidebar */}
           <Box sx={{ width: 320, flexShrink: 0 }}>
