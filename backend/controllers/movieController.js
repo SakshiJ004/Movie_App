@@ -121,9 +121,87 @@ exports.searchMovies = async (req, res) => {
 ---------------------------------------------- */
 
 
+// exports.addMovie = async (req, res) => {
+//   try {
+//     const movie = await Movie.create(req.body);
+
+//     res.status(201).json({
+//       message: "Movie added successfully",
+//       movie,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
 exports.addMovie = async (req, res) => {
   try {
-    const movie = await Movie.create(req.body);
+    const {
+      title,
+      originalTitle,
+      tagline,
+      description,
+      poster,
+      backdrop,
+      rating,
+      voteCount,
+      popularity,
+      releaseDate,
+      status,
+      runtime,
+      genres,
+      budget,
+      revenue,
+      imdbId,
+      homepage,
+      director,
+      cast,
+      crew,
+      videos
+    } = req.body;
+
+    // Ensure director has profilePath
+    const directorObj = director
+      ? {
+        name: director.name,
+        profilePath: director.profilePath || "", // fallback if empty
+        department: director.department || "Directing"
+      }
+      : null;
+
+    // Ensure each cast has profilePath
+    const castArray = cast?.map((c) => ({
+      name: c.name,
+      character: c.character,
+      profilePath: c.profilePath || "", // fallback if empty
+      order: c.order || 0,
+      gender: c.gender || 0
+    })) || [];
+
+    const movie = await Movie.create({
+      title,
+      originalTitle,
+      tagline,
+      description,
+      poster,
+      backdrop,
+      rating,
+      voteCount,
+      popularity,
+      releaseDate,
+      status,
+      runtime,
+      genres,
+      budget,
+      revenue,
+      imdbId,
+      homepage,
+      director: directorObj,
+      cast: castArray,
+      crew,
+      videos
+    });
 
     res.status(201).json({
       message: "Movie added successfully",
