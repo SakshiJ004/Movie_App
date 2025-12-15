@@ -69,33 +69,25 @@ const movieQueue = new Queue('movie-processing', {
     redis: redisConfig
 });
 
-// Add movie to queue
-exports.addMovieToQueue = async (movieData) => {
-    return await movieQueue.add('ADD_MOVIE', {
-        action: 'ADD_MOVIE',
+
+exports.addMovieToQueue = (movieData) => {
+    return movieQueue.add({
+        action: "ADD_MOVIE",
         data: movieData
-    }, {
-        attempts: 3,
-        backoff: {
-            type: 'exponential',
-            delay: 2000
-        }
     });
 };
 
-// Update movie in queue
-exports.updateMovieInQueue = async (movieId, movieData) => {
-    return await movieQueue.add('UPDATE_MOVIE', {
-        action: 'UPDATE_MOVIE',
+exports.updateMovieInQueue = (movieId, movieData) => {
+    return movieQueue.add({
+        action: "UPDATE_MOVIE",
         movieId,
         data: movieData
     });
 };
 
-// Delete movie in queue
-exports.deleteMovieInQueue = async (movieId) => {
-    return await movieQueue.add('DELETE_MOVIE', {
-        action: 'DELETE_MOVIE',
+exports.deleteMovieInQueue = (movieId) => {
+    return movieQueue.add({
+        action: "DELETE_MOVIE",
         movieId
     });
 };
