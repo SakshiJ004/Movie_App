@@ -422,12 +422,32 @@ export default function EditMovie() {
         budget: movie.budget,
         revenue: movie.revenue,
         genres: movie.genres,
-        director: movie.director,
-        cast: movie.cast,
-        crew: movie.crew,
-        videos: movie.videos,
-        productionCompanies: movie.productionCompanies,
+        director: {
+          name: movie.director?.name,
+          profilePath: movie.director?.profilePath
+        },
+        cast: movie.cast.map(c => ({
+          name: c.name,
+          character: c.character
+        })),
+        crew: movie.crew.map(c => ({
+          name: c.name,
+          job: c.job,
+          department: c.department
+        })),
+        videos: movie.videos.map(v => ({
+          key: v.key,
+          name: v.name,
+          site: v.site,
+          type: v.type
+        })),
+        productionCompanies: movie.productionCompanies.map(p => ({
+          name: p.name,
+          logo: p.logo,
+          originCountry: p.originCountry
+        }))
       };
+
 
       await api.put(`/movies/${movie._id}`, payload);
       toast.success("Movie updated successfully!");
