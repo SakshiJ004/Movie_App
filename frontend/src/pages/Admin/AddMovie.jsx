@@ -734,11 +734,9 @@ export default function AddMovie() {
       };
 
       await api.post("/movies", payload);
+      console.log("Movie added:", response.data);
       toast.success("✅ Movie added successfully!");
-
-      setTimeout(() => {
-        navigate('/admin/all-movies');
-      }, 1500);
+      navigate('/admin/all-movies', {replace: true});
     } catch (err) {
       toast.error(err.response?.data?.message || "❌ Failed to add movie");
     }

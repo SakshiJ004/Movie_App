@@ -11,7 +11,7 @@ const { addMovieToQueue, updateMovieInQueue, deleteMovieInQueue } = require("../
 exports.getAllMovies = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = parseInt(req.query.limit) || 20;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 10000);
     const skip = (page - 1) * limit;
 
     const total = await Movie.countDocuments();
