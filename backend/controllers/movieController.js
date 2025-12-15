@@ -193,9 +193,6 @@ exports.updateMovie = async (req, res) => {
   }
 };
 
-
-const Movie = require("../models/Movie");
-
 exports.deleteMovie = async (req, res) => {
   try {
     const movie = await Movie.findByIdAndDelete(req.params.id);
