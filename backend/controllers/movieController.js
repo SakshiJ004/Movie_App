@@ -137,9 +137,40 @@ exports.addMovie = async (req, res) => {
 
 exports.updateMovie = async (req, res) => {
   try {
+    // Only update the main fields, remove cast/crew/videos queue if any
+    const {
+      title,
+      tagline,
+      description,
+      releaseDate,
+      runtime,
+      rating,
+      poster,
+      backdrop,
+      budget,
+      revenue,
+      genres,
+      director
+    } = req.body;
+
+    const updateData = {
+      title,
+      tagline,
+      description,
+      releaseDate,
+      runtime,
+      rating,
+      poster,
+      backdrop,
+      budget,
+      revenue,
+      genres,
+      director
+    };
+
     const movie = await Movie.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 
@@ -156,6 +187,7 @@ exports.updateMovie = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 
 exports.deleteMovie = async (req, res) => {
