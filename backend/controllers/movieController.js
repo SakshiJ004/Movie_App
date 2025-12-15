@@ -120,7 +120,6 @@ exports.searchMovies = async (req, res) => {
    Add Movie (Admin)
 ---------------------------------------------- */
 
-const { addMovieToQueue, updateMovieInQueue, deleteMovieInQueue } = require("../services/queueService");
 
 exports.addMovie = async (req, res) => {
   try {
