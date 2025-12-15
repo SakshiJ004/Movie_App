@@ -283,7 +283,7 @@ url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original"
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                   {movie.release_date && (
                     <Typography sx={{ color: '#94a3b8' }}>
-                      {movie.release_date.slice(0, 4)}
+                      {(movie.release_date || movie.releaseDate)?.slice(0, 4)}
                     </Typography>
                   )}
                   {movie.runtime && (
@@ -326,7 +326,7 @@ url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original"
                     <Star sx={{ color: '#f59e0b', fontSize: 24 }} />
                     <Box>
                       <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>
-                        {movie.vote_average?.toFixed(1)}
+                        {(movie.vote_average ?? movie.rating)?.toFixed(1)}
                       </Typography>
                       <Typography variant="caption" sx={{ color: '#94a3b8' }}>
                         /10
@@ -375,7 +375,7 @@ url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original"
                   Storyline
                 </Typography>
                 <Typography sx={{ color: '#cbd5e1', lineHeight: 1.8, fontSize: '1rem' }}>
-                  {movie.overview || 'No overview available.'}
+                  {movie.overview || movie.description || 'No overview available.'}
                 </Typography>
               </Box>
 
@@ -384,17 +384,29 @@ url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original"
                 {director && (
                   <Grid item xs={12} sm={6}>
                     <Box sx={{
+                      display: 'flex',
+                      gap: 2,
+                      alignItems: 'center',
                       bgcolor: '#1e293b',
                       p: 2,
                       borderRadius: 2,
                       border: '1px solid #334155'
                     }}>
-                      <Typography variant="caption" sx={{ color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
-                        Director
-                      </Typography>
-                      <Typography sx={{ color: 'white', fontWeight: 600, mt: 0.5 }}>
-                        {director.name}
-                      </Typography>
+                      <Avatar
+                        src={getImageUrl(director.profile_path || director.profilePath, "w185")}
+                        sx={{ width: 56, height: 56 }}
+                      />
+                      <Box>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: '#94a3b8', textTransform: 'uppercase' }}
+                        >
+                          Director
+                        </Typography>
+                        <Typography sx={{ color: 'white', fontWeight: 600 }}>
+                          {director.name}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Grid>
                 )}
