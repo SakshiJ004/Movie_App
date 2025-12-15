@@ -716,82 +716,174 @@ export default function AddMovie() {
   };
 
   const submit = async () => {
-  if (!movie.title.trim()) {
-    toast.error("Title is required");
-    return;
-  }
+    if (!movie.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
 
-  try {
-    const payload = {
-      ...movie,
+    try {
+      // const payload = {
+      //   ...movie,
 
-      // Numbers
-      id: movie.id ? Number(movie.id) : undefined,
-      runtime: movie.runtime ? Number(movie.runtime) : undefined,
-      rating: movie.rating ? Number(movie.rating) : undefined,
-      voteCount: movie.voteCount ? Number(movie.voteCount) : undefined,
-      popularity: movie.popularity ? Number(movie.popularity) : undefined,
-      budget: movie.budget ? Number(movie.budget) : undefined,
-      revenue: movie.revenue ? Number(movie.revenue) : undefined,
+      //   // Numbers
+      //   id: movie.id ? Number(movie.id) : undefined,
+      //   runtime: movie.runtime ? Number(movie.runtime) : undefined,
+      //   rating: movie.rating ? Number(movie.rating) : undefined,
+      //   voteCount: movie.voteCount ? Number(movie.voteCount) : undefined,
+      //   popularity: movie.popularity ? Number(movie.popularity) : undefined,
+      //   budget: movie.budget ? Number(movie.budget) : undefined,
+      //   revenue: movie.revenue ? Number(movie.revenue) : undefined,
 
-      // ✅ CAST – ensure array of objects
-      cast: movie.cast.map((c, index) => ({
-        id: index + 1,
-        name: c.name,
-        character: c.character || "",
-        profilePath: c.profilePath || "",
-        order: index,
-        gender: 0
-      })),
+      //   // ✅ CAST – ensure array of objects
+      //   cast: movie.cast.map((c, index) => ({
+      //     id: index + 1,
+      //     name: c.name,
+      //     character: c.character || "",
+      //     profilePath: c.profilePath || "",
+      //     order: index,
+      //     gender: 0
+      //   })),
 
-      // ✅ CREW
-      crew: movie.crew.map((c, index) => ({
-        id: index + 1,
-        name: c.name,
-        job: c.job || "",
-        department: c.department || "",
-        profilePath: c.profilePath || ""
-      })),
+      //   // ✅ CREW
+      //   crew: movie.crew.map((c, index) => ({
+      //     id: index + 1,
+      //     name: c.name,
+      //     job: c.job || "",
+      //     department: c.department || "",
+      //     profilePath: c.profilePath || ""
+      //   })),
 
-      // ✅ PRODUCTION COMPANIES
-      productionCompanies: movie.productionCompanies.map((c, index) => ({
-        id: index + 1,
-        name: c.name,
-        logo: c.logo || "",
-        originCountry: c.originCountry || ""
-      })),
+      //   // ✅ PRODUCTION COMPANIES
+      //   productionCompanies: movie.productionCompanies.map((c, index) => ({
+      //     id: index + 1,
+      //     name: c.name,
+      //     logo: c.logo || "",
+      //     originCountry: c.originCountry || ""
+      //   })),
 
-      // ✅ TRAILER – send ONLY if key exists
-      trailer: movie.trailer?.key
-        ? {
+      //   // ✅ TRAILER – send ONLY if key exists
+      //   trailer: movie.trailer?.key
+      //     ? {
+      //         key: movie.trailer.key,
+      //         name: movie.trailer.name || "Official Trailer",
+      //         site: movie.trailer.site || "YouTube",
+      //         type: movie.trailer.type || "Trailer",
+      //         official: true
+      //       }
+      //     : undefined,
+
+      //   // ✅ VIDEOS – remove empty ones
+      //   videos: movie.videos.filter(v => v.key).map((v, index) => ({
+      //     id: index + 1,
+      //     key: v.key,
+      //     name: v.name || "Video",
+      //     site: v.site || "YouTube",
+      //     type: v.type || "Trailer",
+      //     official: true
+      //   }))
+      // };
+
+
+      const payload = {
+        title: movie.title,
+        originalTitle: movie.originalTitle || undefined,
+        tagline: movie.tagline || undefined,
+        description: movie.description || undefined,
+        releaseDate: movie.releaseDate || undefined,
+        status: movie.status || "Released",
+
+        runtime: movie.runtime ? Number(movie.runtime) : undefined,
+        rating: movie.rating ? Number(movie.rating) : undefined,
+        voteCount: movie.voteCount ? Number(movie.voteCount) : undefined,
+        popularity: movie.popularity ? Number(movie.popularity) : undefined,
+
+        poster: movie.poster || undefined,
+        backdrop: movie.backdrop || undefined,
+
+        imdbId: movie.imdbId || undefined,
+        homepage: movie.homepage || undefined,
+
+        budget: movie.budget ? Number(movie.budget) : undefined,
+        revenue: movie.revenue ? Number(movie.revenue) : undefined,
+
+        genres: movie.genres.length ? movie.genres : undefined,
+
+        // ✅ DIRECTOR — send ONLY if name exists
+        director: movie.director?.name
+          ? {
+            name: movie.director.name,
+            profilePath: movie.director.profilePath || ""
+          }
+          : undefined,
+
+        // ✅ CAST
+        cast: movie.cast.length
+          ? movie.cast.map((c, index) => ({
+            id: index + 1,
+            name: c.name,
+            character: c.character || "",
+            profilePath: c.profilePath || "",
+            order: index,
+            gender: 0
+          }))
+          : undefined,
+
+        // ✅ CREW
+        crew: movie.crew.length
+          ? movie.crew.map((c, index) => ({
+            id: index + 1,
+            name: c.name,
+            job: c.job || "",
+            department: c.department || "",
+            profilePath: c.profilePath || ""
+          }))
+          : undefined,
+
+        // ✅ PRODUCTION COMPANIES
+        productionCompanies: movie.productionCompanies.length
+          ? movie.productionCompanies.map((c, index) => ({
+            id: index + 1,
+            name: c.name,
+            logo: c.logo || "",
+            originCountry: c.originCountry || ""
+          }))
+          : undefined,
+
+        // ✅ TRAILER
+        trailer: movie.trailer?.key
+          ? {
             key: movie.trailer.key,
             name: movie.trailer.name || "Official Trailer",
             site: movie.trailer.site || "YouTube",
             type: movie.trailer.type || "Trailer",
             official: true
           }
-        : undefined,
+          : undefined,
 
-      // ✅ VIDEOS – remove empty ones
-      videos: movie.videos.filter(v => v.key).map((v, index) => ({
-        id: index + 1,
-        key: v.key,
-        name: v.name || "Video",
-        site: v.site || "YouTube",
-        type: v.type || "Trailer",
-        official: true
-      }))
-    };
+        // ✅ VIDEOS
+        videos: movie.videos.length
+          ? movie.videos
+            .filter(v => v.key)
+            .map((v, index) => ({
+              id: index + 1,
+              key: v.key,
+              name: v.name || "Video",
+              site: v.site || "YouTube",
+              type: v.type || "Trailer",
+              official: true
+            }))
+          : undefined
+      };
 
-    await api.post("/movies", payload);
+      await api.post("/movies", payload);
 
-    toast.success("✅ Movie added successfully!");
-    navigate("/admin/all-movies", { replace: true, state: { refresh: true } });
+      toast.success("✅ Movie added successfully!");
+      navigate("/admin/all-movies", { replace: true, state: { refresh: true } });
 
-  } catch (err) {
-    toast.error(err.response?.data?.message || "❌ Failed to add movie");
-  }
-};
+    } catch (err) {
+      toast.error(err.response?.data?.message || "❌ Failed to add movie");
+    }
+  };
 
 
   return (
