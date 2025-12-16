@@ -473,24 +473,24 @@ export default function EditMovie() {
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: '#0f172a', py: 4 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Button
             startIcon={<ArrowBack />}
             onClick={() => navigate('/admin/all-movies')}
-            sx={{ color: '#94a3b8', mb: 2, textTransform: 'none' }}
+            sx={{ color: '#94a3b8', mb: 2, textTransform: 'none', fontSize: { xs: '0.875rem', sm: '1rem' } }}
           >
             Back to Movies
           </Button>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <MovieIcon sx={{ fontSize: 40, color: '#f59e0b' }} />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.5, sm: 2 } }}>
+            <MovieIcon sx={{ fontSize: { xs: 32, sm: 40 }, color: '#f59e0b' }} />
             <Box>
-              <Typography variant="h3" sx={{ color: 'white', fontWeight: 'bold' }}>
+              <Typography variant="h3" sx={{ color: 'white', fontWeight: 'bold', fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }}>
                 Edit Movie
               </Typography>
-              <Typography sx={{ color: '#94a3b8', mt: 0.5 }}>
+              <Typography sx={{ color: '#94a3b8', mt: 0.5, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                 Update movie information and details
               </Typography>
             </Box>
@@ -509,11 +509,14 @@ export default function EditMovie() {
           </Alert>
         )}
 
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
           {/* Basic Info */}
           <Grid item xs={12} md={6}>
-            <Paper elevation={3} sx={{ p: 3, bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 2 }}>
-              <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 3 }}>
+            <Paper elevation={3} sx={{ p: { xs: 2, sm: 2.5, md: 3 }, bgcolor: '#1e293b', border: '1px solid #334155', borderRadius: 2 }}>
+              <Typography variant="h6" sx={{
+                color: 'white', fontWeight: 600, mb: { xs: 2, sm: 3 },
+                fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' }
+              }}>
                 📋 Basic Information
               </Typography>
 
@@ -526,7 +529,7 @@ export default function EditMovie() {
                 required
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -544,7 +547,7 @@ export default function EditMovie() {
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -563,7 +566,7 @@ export default function EditMovie() {
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -581,7 +584,7 @@ export default function EditMovie() {
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ shrink: true, style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -600,7 +603,7 @@ export default function EditMovie() {
                     onChange={(e) => handleChange("runtime", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' },
@@ -619,7 +622,7 @@ export default function EditMovie() {
                     onChange={(e) => handleChange("rating", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' },
@@ -647,7 +650,7 @@ export default function EditMovie() {
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -663,7 +666,7 @@ export default function EditMovie() {
                 onChange={(e) => handleChange("backdrop", e.target.value)}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
-                  style: { color: 'white' },
+                  style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                   sx: {
                     bgcolor: '#0f172a',
                     '& fieldset': { borderColor: '#334155' },
@@ -688,7 +691,7 @@ export default function EditMovie() {
                     onChange={(e) => handleChange("budget", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' },
@@ -706,7 +709,7 @@ export default function EditMovie() {
                     onChange={(e) => handleChange("revenue", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' },
@@ -736,7 +739,7 @@ export default function EditMovie() {
                   size="small"
                   InputLabelProps={{ style: { color: '#94a3b8' } }}
                   InputProps={{
-                    style: { color: 'white' },
+                    style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                     sx: {
                       bgcolor: '#0f172a',
                       '& fieldset': { borderColor: '#334155' }
@@ -762,7 +765,9 @@ export default function EditMovie() {
                     sx={{
                       bgcolor: '#334155',
                       color: '#cbd5e1',
-                      '& .MuiChip-deleteIcon': { color: '#94a3b8' }
+                      fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                      height: { xs: 28, sm: 32 },
+                      '& .MuiChip-deleteIcon': { color: '#94a3b8', fontSize: { xs: 16, sm: 18 } }
                     }}
                   />
                 ))}
@@ -786,7 +791,7 @@ export default function EditMovie() {
                     onChange={(e) => handleNestedChange("director", "name", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' }
@@ -802,7 +807,7 @@ export default function EditMovie() {
                     onChange={(e) => handleNestedChange("director", "profilePath", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
-                      style: { color: 'white' },
+                      style: { color: 'white', fontSize: window.innerWidth < 640 ? '0.875rem' : '1rem' },
                       sx: {
                         bgcolor: '#0f172a',
                         '& fieldset': { borderColor: '#334155' }
@@ -821,12 +826,12 @@ export default function EditMovie() {
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
                   🖼️ Poster Preview
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: { xs: 1, sm: 2 } }}>
                   <img
                     src={movie.poster}
                     alt="poster"
                     style={{
-                      maxWidth: 250,
+                      maxWidth: window.innerWidth < 640 ? 180 : 250,
                       borderRadius: 8,
                       boxShadow: '0 8px 24px rgba(0,0,0,0.3)'
                     }}
@@ -838,7 +843,13 @@ export default function EditMovie() {
         </Grid>
 
         {/* Action Buttons */}
-        <Box sx={{ display: 'flex', gap: 2, mt: 4, justifyContent: 'flex-end' }}>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 1.5, sm: 2 },
+          mt: { xs: 3, sm: 4 },
+          justifyContent: 'flex-end'
+        }}>
           <Button
             variant="outlined"
             startIcon={<ArrowBack />}
@@ -847,6 +858,8 @@ export default function EditMovie() {
               color: '#94a3b8',
               borderColor: '#334155',
               textTransform: 'none',
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              width: { xs: '100%', sm: 'auto' },
               '&:hover': { borderColor: '#475569', bgcolor: '#1e293b' }
             }}
           >
@@ -861,8 +874,10 @@ export default function EditMovie() {
               bgcolor: '#f59e0b',
               color: 'black',
               fontWeight: 600,
-              px: 4,
+              px: { xs: 3, sm: 4 },
               textTransform: 'none',
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              width: { xs: '100%', sm: 'auto' },
               '&:hover': { bgcolor: '#d97706' },
               '&:disabled': { bgcolor: '#334155', color: '#64748b' }
             }}
