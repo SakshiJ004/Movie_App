@@ -1,3 +1,235 @@
+// import { useState, useContext, useEffect } from "react";
+// import { Box, Typography, Chip, Button } from "@mui/material";
+// import { Star } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom";
+// import { AuthContext } from "../context/AuthContext";
+// import api from "../api/axios";
+
+// export default function MovieCard({ movie, index, showRank = true, source = "admin" }) {
+//     const [imageError, setImageError] = useState(false);
+//     const [inWatchlist, setInWatchlist] = useState(false);
+//     const [watched, setWatched] = useState(false);
+//     const { token } = useContext(AuthContext);
+//     const navigate = useNavigate();
+//     const handleClick = () => {
+//         if (source === "tmdb" || movie._id?.startsWith?.("tmdb-")) {
+//             const tmdbId = movie.id || movie._id.replace("tmdb-", "");
+//             navigate(`/tmdb/${tmdbId}`);
+//         } else {
+//             navigate(`/movie/${movie._id}`);
+//         }
+//     };
+
+//     // Check if movie is in watchlist
+//     useEffect(() => {
+//         if (token) {
+//             checkWatchlistStatus();
+//         }
+//     }, [token, movie._id]);
+
+//     const checkWatchlistStatus = async () => {
+//         try {
+//             const res = await api.get('/watchlist');
+//             const watchlistItem = res.data.find(item => item.movieId === movie._id);
+//             if (watchlistItem) {
+//                 setInWatchlist(true);
+//                 setWatched(watchlistItem.watched);
+//             }
+//         } catch (err) {
+//             console.error('Error checking watchlist:', err);
+//         }
+//     };
+
+//     const handleAddToWatchlist = async (e) => {
+//         e.stopPropagation(); // Prevent navigation
+//         if (!token) {
+//             navigate('/login');
+//             return;
+//         }
+
+//         try {
+//             if (inWatchlist) {
+//                 await api.delete(`/watchlist/${movie._id}`);
+//                 setInWatchlist(false);
+//                 setWatched(false);
+//             } else {
+//                 await api.post('/watchlist', { movieId: movie._id });
+//                 setInWatchlist(true);
+//             }
+//         } catch (err) {
+//             console.error('Error updating watchlist:', err);
+//         }
+//     };
+
+//     const handleToggleWatched = async (e) => {
+//         e.stopPropagation(); // Prevent navigation
+//         if (!token) {
+//             navigate('/login');
+//             return;
+//         }
+
+//         try {
+//             const newWatchedStatus = !watched;
+//             await api.patch(`/watchlist/${movie._id}/watched`, { watched: newWatchedStatus });
+//             setWatched(newWatchedStatus);
+//             if (!inWatchlist) {
+//                 setInWatchlist(true);
+//             }
+//         } catch (err) {
+//             console.error('Error toggling watched:', err);
+//         }
+//     };
+
+//     return (
+//         <Box
+//             onClick={handleClick}
+//             sx={{
+//                 display: 'flex',
+//                 gap: 2,
+//                 p: 2,
+//                 bgcolor: '#1e293b',
+//                 borderRadius: 2,
+//                 border: '1px solid #334155',
+//                 '&:hover': { bgcolor: '#293548' },
+//                 transition: 'background-color 0.2s'
+//             }}>
+//             <Box sx={{ position: 'relative', flexShrink: 0 }}>
+//                 {showRank && (
+//                     <Box sx={{
+//                         position: 'absolute',
+//                         left: -8,
+//                         top: -8,
+//                         bgcolor: '#f59e0b',
+//                         color: 'black',
+//                         fontWeight: 'bold',
+//                         borderRadius: 1,
+//                         px: 1,
+//                         py: 0.5,
+//                         fontSize: '0.875rem',
+//                         zIndex: 10
+//                     }}>
+//                         #{index + 1}
+//                     </Box>
+//                 )}
+
+//                 <img
+//                     src={imageError ? "https://via.placeholder.com/150x225/333/666?text=No+Image" : movie.poster}
+//                     alt={movie.title}
+//                     onError={() => setImageError(true)}
+//                     style={{ width: 128, height: 192, objectFit: 'cover', borderRadius: 4 }}
+//                 />
+//             </Box>
+
+//             <Box sx={{ flex: 1, minWidth: 0 }}>
+//                 <Typography variant="h6" sx={{ color: 'white', mb: 1, fontWeight: 600 }}>
+//                     {movie.title}
+//                 </Typography>
+
+//                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+//                     {movie.releaseDate && (
+//                         <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+//                             {movie.releaseDate.split('-')[0]}
+//                         </Typography>
+//                     )}
+//                     {movie.duration && (
+//                         <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+//                             {movie.duration}
+//                         </Typography>
+//                     )}
+//                     <Box sx={{
+//                         px: 1,
+//                         py: 0.25,
+//                         border: '1px solid #475569',
+//                         borderRadius: 0.5,
+//                         fontSize: '0.75rem',
+//                         color: '#94a3b8'
+//                     }}>
+//                         R
+//                     </Box>
+//                 </Box>
+
+//                 <Typography variant="body2" sx={{
+//                     color: '#cbd5e1',
+//                     mb: 1.5,
+//                     overflow: 'hidden',
+//                     textOverflow: 'ellipsis',
+//                     display: '-webkit-box',
+//                     WebkitLineClamp: 2,
+//                     WebkitBoxOrient: 'vertical'
+//                 }}>
+//                     {movie.description}
+//                 </Typography>
+
+//                 {movie.genres?.length > 0 && (
+//                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1.5 }}>
+//                         {movie.genres.map((genre, i) => (
+//                             <Chip
+//                                 key={i}
+//                                 label={genre}
+//                                 size="small"
+//                                 sx={{
+//                                     bgcolor: '#334155',
+//                                     color: '#cbd5e1',
+//                                     fontSize: '0.75rem',
+//                                     height: 24
+//                                 }}
+//                             />
+//                         ))}
+//                     </Box>
+//                 )}
+
+//                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+//                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+//                         <Star sx={{ fontSize: 16, color: '#f59e0b' }} />
+//                         <Typography sx={{ color: 'white', fontWeight: 600 }}>
+//                             {movie.rating?.toFixed(1)}
+//                         </Typography>
+//                     </Box>
+
+//                     {token && (
+//                         <>
+//                             <Button
+//                                 size="small"
+//                                 onClick={handleAddToWatchlist}
+//                                 sx={{
+//                                     color: inWatchlist ? '#10b981' : '#60a5fa',
+//                                     textTransform: 'none',
+//                                     fontWeight: inWatchlist ? 600 : 400
+//                                 }}
+//                             >
+//                                 {inWatchlist ? '✓ In Watchlist' : '+ Watchlist'}
+//                             </Button>
+
+//                             <Button
+//                                 size="small"
+//                                 onClick={handleToggleWatched}
+//                                 sx={{
+//                                     color: watched ? '#10b981' : '#94a3b8',
+//                                     textTransform: 'none',
+//                                     fontWeight: watched ? 600 : 400
+//                                 }}
+//                             >
+//                                 {watched ? '✓ Watched' : 'Mark as watched'}
+//                             </Button>
+//                         </>
+//                     )}
+
+//                     {!token && (
+//                         <Button
+//                             size="small"
+//                             onClick={() => navigate('/login')}
+//                             sx={{ color: '#60a5fa', textTransform: 'none' }}
+//                         >
+//                             Login to track
+//                         </Button>
+//                     )}
+//                 </Box>
+//             </Box>
+//         </Box>
+//     );
+// }
+
+
 import { useState, useContext, useEffect } from "react";
 import { Box, Typography, Chip, Button } from "@mui/material";
 import { Star } from "@mui/icons-material";
@@ -11,6 +243,7 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
     const [watched, setWatched] = useState(false);
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
+
     const handleClick = () => {
         if (source === "tmdb" || movie._id?.startsWith?.("tmdb-")) {
             const tmdbId = movie.id || movie._id.replace("tmdb-", "");
@@ -20,7 +253,6 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
         }
     };
 
-    // Check if movie is in watchlist
     useEffect(() => {
         if (token) {
             checkWatchlistStatus();
@@ -41,7 +273,7 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
     };
 
     const handleAddToWatchlist = async (e) => {
-        e.stopPropagation(); // Prevent navigation
+        e.stopPropagation();
         if (!token) {
             navigate('/login');
             return;
@@ -62,7 +294,7 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
     };
 
     const handleToggleWatched = async (e) => {
-        e.stopPropagation(); // Prevent navigation
+        e.stopPropagation();
         if (!token) {
             navigate('/login');
             return;
@@ -85,19 +317,32 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
             onClick={handleClick}
             sx={{
                 display: 'flex',
-                gap: 2,
-                p: 2,
+                flexDirection: { xs: 'column', sm: 'row' }, // Stack on mobile, row on tablet+
+                gap: { xs: 1.5, sm: 2 },
+                p: { xs: 1.5, sm: 2 },
                 bgcolor: '#1e293b',
-                borderRadius: 2,
+                borderRadius: { xs: 1.5, sm: 2 },
                 border: '1px solid #334155',
-                '&:hover': { bgcolor: '#293548' },
-                transition: 'background-color 0.2s'
+                cursor: 'pointer',
+                '&:hover': {
+                    bgcolor: '#293548',
+                    transform: { xs: 'none', sm: 'translateX(4px)' }, // No transform on mobile
+                },
+                transition: 'all 0.2s'
             }}>
-            <Box sx={{ position: 'relative', flexShrink: 0 }}>
+
+            <Box sx={{
+                position: 'relative',
+                flexShrink: 0,
+                width: { xs: '100%', sm: 'auto' }, // Full width on mobile
+                display: 'flex',
+                justifyContent: { xs: 'center', sm: 'flex-start' }
+            }}>
                 {showRank && (
                     <Box sx={{
                         position: 'absolute',
-                        left: -8,
+                        left: { xs: '50%', sm: -8 }, // Center on mobile, left on desktop
+                        transform: { xs: 'translateX(-50%)', sm: 'none' },
                         top: -8,
                         bgcolor: '#f59e0b',
                         color: 'black',
@@ -105,7 +350,7 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                         borderRadius: 1,
                         px: 1,
                         py: 0.5,
-                        fontSize: '0.875rem',
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
                         zIndex: 10
                     }}>
                         #{index + 1}
@@ -116,23 +361,48 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                     src={imageError ? "https://via.placeholder.com/150x225/333/666?text=No+Image" : movie.poster}
                     alt={movie.title}
                     onError={() => setImageError(true)}
-                    style={{ width: 128, height: 192, objectFit: 'cover', borderRadius: 4 }}
+                    style={{
+                        width: 128,
+                        height: 192,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        maxWidth: '100%' // Prevent overflow on small screens
+                    }}
                 />
             </Box>
 
             <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Typography variant="h6" sx={{ color: 'white', mb: 1, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{
+                    color: 'white',
+                    mb: { xs: 0.75, sm: 1 },
+                    fontWeight: 600,
+                    fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' },
+                    textAlign: { xs: 'center', sm: 'left' } // Center on mobile
+                }}>
                     {movie.title}
                 </Typography>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: { xs: 1, sm: 1.5 },
+                    mb: { xs: 1, sm: 1.5 },
+                    justifyContent: { xs: 'center', sm: 'flex-start' }, // Center on mobile
+                    flexWrap: 'wrap'
+                }}>
                     {movie.releaseDate && (
-                        <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+                        <Typography variant="body2" sx={{
+                            color: '#94a3b8',
+                            fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}>
                             {movie.releaseDate.split('-')[0]}
                         </Typography>
                     )}
                     {movie.duration && (
-                        <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+                        <Typography variant="body2" sx={{
+                            color: '#94a3b8',
+                            fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}>
                             {movie.duration}
                         </Typography>
                     )}
@@ -141,7 +411,7 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                         py: 0.25,
                         border: '1px solid #475569',
                         borderRadius: 0.5,
-                        fontSize: '0.75rem',
+                        fontSize: { xs: '0.65rem', sm: '0.75rem' },
                         color: '#94a3b8'
                     }}>
                         R
@@ -150,19 +420,28 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
 
                 <Typography variant="body2" sx={{
                     color: '#cbd5e1',
-                    mb: 1.5,
+                    mb: { xs: 1, sm: 1.5 },
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
+                    WebkitLineClamp: { xs: 2, sm: 2 }, // Show 2 lines on all devices
+                    WebkitBoxOrient: 'vertical',
+                    fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                    textAlign: { xs: 'center', sm: 'left' },
+                    display: { xs: 'none', sm: '-webkit-box' } // Hide description on mobile
                 }}>
                     {movie.description}
                 </Typography>
 
                 {movie.genres?.length > 0 && (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1.5 }}>
-                        {movie.genres.map((genre, i) => (
+                    <Box sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: { xs: 0.75, sm: 1 },
+                        mb: { xs: 1, sm: 1.5 },
+                        justifyContent: { xs: 'center', sm: 'flex-start' }
+                    }}>
+                        {movie.genres.slice(0, 3).map((genre, i) => ( // Limit to 3 genres on mobile
                             <Chip
                                 key={i}
                                 label={genre}
@@ -170,18 +449,28 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                                 sx={{
                                     bgcolor: '#334155',
                                     color: '#cbd5e1',
-                                    fontSize: '0.75rem',
-                                    height: 24
+                                    fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                                    height: { xs: 22, sm: 24 }
                                 }}
                             />
                         ))}
                     </Box>
                 )}
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: { xs: 1.5, sm: 2 },
+                    flexWrap: 'wrap',
+                    justifyContent: { xs: 'center', sm: 'flex-start' }
+                }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Star sx={{ fontSize: 16, color: '#f59e0b' }} />
-                        <Typography sx={{ color: 'white', fontWeight: 600 }}>
+                        <Star sx={{ fontSize: { xs: 14, sm: 16 }, color: '#f59e0b' }} />
+                        <Typography sx={{
+                            color: 'white',
+                            fontWeight: 600,
+                            fontSize: { xs: '0.875rem', sm: '1rem' }
+                        }}>
                             {movie.rating?.toFixed(1)}
                         </Typography>
                     </Box>
@@ -194,10 +483,14 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                                 sx={{
                                     color: inWatchlist ? '#10b981' : '#60a5fa',
                                     textTransform: 'none',
-                                    fontWeight: inWatchlist ? 600 : 400
+                                    fontWeight: inWatchlist ? 600 : 400,
+                                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                    px: { xs: 1, sm: 1.5 },
+                                    py: { xs: 0.5, sm: 0.75 },
+                                    minWidth: 'auto'
                                 }}
                             >
-                                {inWatchlist ? '✓ In Watchlist' : '+ Watchlist'}
+                                {inWatchlist ? '✓ Watchlist' : '+ Watchlist'}
                             </Button>
 
                             <Button
@@ -206,10 +499,15 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                                 sx={{
                                     color: watched ? '#10b981' : '#94a3b8',
                                     textTransform: 'none',
-                                    fontWeight: watched ? 600 : 400
+                                    fontWeight: watched ? 600 : 400,
+                                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                    px: { xs: 1, sm: 1.5 },
+                                    py: { xs: 0.5, sm: 0.75 },
+                                    minWidth: 'auto',
+                                    display: { xs: 'none', sm: 'inline-flex' } // Hide on mobile
                                 }}
                             >
-                                {watched ? '✓ Watched' : 'Mark as watched'}
+                                {watched ? '✓ Watched' : 'Mark watched'}
                             </Button>
                         </>
                     )}
@@ -218,9 +516,15 @@ export default function MovieCard({ movie, index, showRank = true, source = "adm
                         <Button
                             size="small"
                             onClick={() => navigate('/login')}
-                            sx={{ color: '#60a5fa', textTransform: 'none' }}
+                            sx={{
+                                color: '#60a5fa',
+                                textTransform: 'none',
+                                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                                px: { xs: 1, sm: 1.5 },
+                                py: { xs: 0.5, sm: 0.75 }
+                            }}
                         >
-                            Login to track
+                            Login
                         </Button>
                     )}
                 </Box>
