@@ -133,7 +133,7 @@ export default function DBMovieDetails() {
       }}>
         <Grid container spacing={{ xs: 3, sm: 4, md: 5 }}>
           {/* Poster */}
-          <Grid item xs={12} sm={5} md={4} lg={3}>
+          <Grid item xs={12} sm={5} md={4} lg={3} xl={2}>
             <Card sx={{ bgcolor: '#1e293b', border: '1px solid #334155', overflow: 'hidden' }}>
               <CardMedia
                 component="img"
@@ -226,17 +226,43 @@ export default function DBMovieDetails() {
                 {movie.director && (
                   <Grid item xs={12} sm={6}>
                     <Box sx={{
+                      display: 'flex',
+                      gap: 2,
+                      alignItems: 'center',
                       bgcolor: '#1e293b',
                       p: 2,
                       borderRadius: 2,
                       border: '1px solid #334155'
                     }}>
-                      <Typography variant="caption" sx={{ color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>
-                        Director
-                      </Typography>
-                      <Typography sx={{ color: 'white', fontWeight: 600, mt: 0.5 }}>
-                        {typeof movie.director === 'string' ? movie.director : movie.director.name}
-                      </Typography>
+                      {typeof movie.director === 'object' && movie.director.profilePath && (
+                        <img
+                          src={movie.director.profilePath.startsWith('http')
+                            ? movie.director.profilePath
+                            : `https://image.tmdb.org/t/p/w185${movie.director.profilePath}`}
+                          alt={movie.director.name}
+                          style={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: '50%',
+                            objectFit: 'cover'
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                      <Box>
+                        <Typography variant="caption" sx={{
+                          color: '#94a3b8',
+                          textTransform: 'uppercase',
+                          letterSpacing: 1
+                        }}>
+                          Director
+                        </Typography>
+                        <Typography sx={{ color: 'white', fontWeight: 600, mt: 0.5 }}>
+                          {typeof movie.director === 'string' ? movie.director : movie.director.name}
+                        </Typography>
+                      </Box>
                     </Box>
                   </Grid>
                 )}
@@ -282,26 +308,43 @@ export default function DBMovieDetails() {
                               border: '1px solid #334155',
                             }}
                           >
-                            {actorPhoto ? (
+                            {actorPhoto && actorPhoto !== "" ? (
                               <img
                                 src={actorPhoto.startsWith('http') ? actorPhoto : `https://image.tmdb.org/t/p/w185${actorPhoto}`}
                                 alt={actorName}
-                                style={{ width: '100%', height: window.innerWidth < 640 ? 180 : 200, objectFit: 'cover' }}
+                                style={{ width: '100%', height: 200, objectFit: 'cover' }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
                               />
-                            ) : (
-                              <Box sx={{
-                                width: '100%',
-                                height: 200,
-                                bgcolor: '#334155',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#64748b',
-                                fontSize: '3rem',
-                                fontWeight: 'bold'
-                              }}>
-                                {actorName?.[0]?.toUpperCase()}
-                              </Box>
+                            ) : null}
+                            <Box sx={{
+                              width: '100%',
+                              height: 200,
+                              bgcolor: '#334155',
+                              display: actorPhoto && actorPhoto !== "" ? 'none' : 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#64748b',
+                              fontSize: '3rem',
+                              fontWeight: 'bold'
+                            }}>
+                              {actorName?.[0]?.toUpperCase()}
+                            </Box>
+                            <Box sx={{
+                              width: '100%',
+                              height: 200,
+                              bgcolor: '#334155',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#64748b',
+                              fontSize: '3rem',
+                              fontWeight: 'bold'
+                            }}>
+                              {actorName?.[0]?.toUpperCase()}
+                            </Box>
                             )}
                             <Box sx={{ p: 1.5 }}>
                               <Typography
@@ -357,7 +400,7 @@ export default function DBMovieDetails() {
                   >
                     <CardMedia
                       component="img"
-                      height={{ xs: 200, sm: 240, md: 280 }}
+                      height="280"
                       image={m.poster || '/placeholder.jpg'}
                       alt={m.title}
                     />
