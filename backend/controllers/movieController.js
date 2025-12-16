@@ -135,6 +135,88 @@ exports.searchMovies = async (req, res) => {
 // };
 
 
+// exports.addMovie = async (req, res) => {
+//   try {
+//     const {
+//       title,
+//       originalTitle,
+//       tagline,
+//       description,
+//       poster,
+//       backdrop,
+//       rating,
+//       voteCount,
+//       popularity,
+//       releaseDate,
+//       status,
+//       runtime,
+//       genres,
+//       budget,
+//       revenue,
+//       imdbId,
+//       homepage,
+//       director,
+//       cast,
+//       crew,
+//       videos
+//     } = req.body;
+
+//     // Ensure director has profilePath
+//     const directorObj = director
+//       ? {
+//         name: director.name,
+//         profilePath: director.profilePath || "", // fallback if empty
+//         department: director.department || "Directing"
+//       }
+//       : null;
+
+//     // Ensure each cast has profilePath
+//     const castArray = cast?.map((c) => ({
+//       name: c.name,
+//       character: c.character,
+//       profilePath: c.profilePath || "", // fallback if empty
+//       order: c.order || 0,
+//       gender: c.gender || 0
+//     })) || [];
+
+//     const movie = await Movie.create({
+//       title,
+//       originalTitle,
+//       tagline,
+//       description,
+//       poster,
+//       backdrop,
+//       rating,
+//       voteCount,
+//       popularity,
+//       releaseDate,
+//       status,
+//       runtime,
+//       genres,
+//       budget,
+//       revenue,
+//       imdbId,
+//       homepage,
+//       director: directorObj,
+//       cast: castArray,
+//       crew,
+//       videos
+//     });
+
+//     res.status(201).json({
+//       message: "Movie added successfully",
+//       movie,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+const normalizePath = (path) => {
+  if (!path) return "";
+  return path.replace(/^https?:\/\/image\.tmdb\.org\/t\/p\/\w+/, "");
+};
+
 exports.addMovie = async (req, res) => {
   try {
     const {
@@ -161,20 +243,18 @@ exports.addMovie = async (req, res) => {
       videos
     } = req.body;
 
-    // Ensure director has profilePath
     const directorObj = director
       ? {
         name: director.name,
-        profilePath: director.profilePath || "", // fallback if empty
+        profilePath: normalizePath(director.profilePath),
         department: director.department || "Directing"
       }
       : null;
 
-    // Ensure each cast has profilePath
-    const castArray = cast?.map((c) => ({
+    const castArray = cast?.map(c => ({
       name: c.name,
       character: c.character,
-      profilePath: c.profilePath || "", // fallback if empty
+      profilePath: normalizePath(c.profilePath),
       order: c.order || 0,
       gender: c.gender || 0
     })) || [];
@@ -184,8 +264,8 @@ exports.addMovie = async (req, res) => {
       originalTitle,
       tagline,
       description,
-      poster,
-      backdrop,
+      poster: normalizePath(poster),
+      backdrop: normalizePath(backdrop),
       rating,
       voteCount,
       popularity,
@@ -213,44 +293,82 @@ exports.addMovie = async (req, res) => {
 };
 
 
+
+// exports.updateMovie = async (req, res) => {
+//   try {
+//     const {
+//       title,
+//       tagline,
+//       description,
+//       releaseDate,
+//       runtime,
+//       rating,
+//       poster,
+//       backdrop,
+//       budget,
+//       revenue,
+//       genres,
+//       director,
+//       cast,
+//       crew,
+//       videos,
+//       productionCompanies
+//     } = req.body;
+
+//     const updateData = {
+//       title,
+//       tagline,
+//       description,
+//       releaseDate,
+//       runtime,
+//       rating,
+//       poster,
+//       backdrop,
+//       budget,
+//       revenue,
+//       genres,
+//       director,
+//       cast,
+//       crew,
+//       videos,
+//       productionCompanies
+//     };
+
+//     const movie = await Movie.findByIdAndUpdate(
+//       req.params.id,
+//       updateData,
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!movie) return res.status(404).json({ message: "Movie not found" });
+
+//     res.json({
+//       message: "Movie updated successfully",
+//       movie
+//     });
+//   } catch (err) {
+//     console.error("Update error:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
 exports.updateMovie = async (req, res) => {
   try {
-    const {
-      title,
-      tagline,
-      description,
-      releaseDate,
-      runtime,
-      rating,
-      poster,
-      backdrop,
-      budget,
-      revenue,
-      genres,
-      director,
-      cast,
-      crew,
-      videos,
-      productionCompanies
-    } = req.body;
-
     const updateData = {
-      title,
-      tagline,
-      description,
-      releaseDate,
-      runtime,
-      rating,
-      poster,
-      backdrop,
-      budget,
-      revenue,
-      genres,
-      director,
-      cast,
-      crew,
-      videos,
-      productionCompanies
+      ...req.body,
+      poster: normalizePath(req.body.poster),
+      backdrop: normalizePath(req.body.backdrop),
+      director: req.body.director
+        ? {
+          ...req.body.director,
+          profilePath: normalizePath(req.body.director.profilePath)
+        }
+        : null,
+      cast: req.body.cast?.map(c => ({
+        ...c,
+        profilePath: normalizePath(c.profilePath)
+      }))
     };
 
     const movie = await Movie.findByIdAndUpdate(
@@ -259,14 +377,14 @@ exports.updateMovie = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!movie) return res.status(404).json({ message: "Movie not found" });
+    if (!movie)
+      return res.status(404).json({ message: "Movie not found" });
 
     res.json({
       message: "Movie updated successfully",
       movie
     });
   } catch (err) {
-    console.error("Update error:", err);
     res.status(500).json({ message: err.message });
   }
 };
