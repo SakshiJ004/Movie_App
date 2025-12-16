@@ -961,6 +961,7 @@ export default function AddMovie() {
                 fullWidth
                 label="Original Title"
                 value={movie.originalTitle}
+                required
                 onChange={(e) => handleChange("originalTitle", e.target.value)}
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
@@ -978,6 +979,7 @@ export default function AddMovie() {
                 fullWidth
                 label="Tagline"
                 value={movie.tagline}
+                required
                 onChange={(e) => handleChange("tagline", e.target.value)}
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
@@ -997,6 +999,7 @@ export default function AddMovie() {
                 minRows={4}
                 label="Description"
                 value={movie.description}
+                required
                 onChange={(e) => handleChange("description", e.target.value)}
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
@@ -1015,6 +1018,7 @@ export default function AddMovie() {
                 label="Release Date"
                 type="date"
                 value={movie.releaseDate}
+                required
                 onChange={(e) => handleChange("releaseDate", e.target.value)}
                 sx={{ mb: 2.5 }}
                 InputLabelProps={{ shrink: true, style: { color: '#94a3b8' } }}
@@ -1032,6 +1036,7 @@ export default function AddMovie() {
                 fullWidth
                 label="Status"
                 value={movie.status}
+                required
                 onChange={(e) => handleChange("status", e.target.value)}
                 sx={{ mb: 2.5 }}
                 placeholder="Released, Post Production"
@@ -1051,6 +1056,7 @@ export default function AddMovie() {
                 label="Runtime (minutes)"
                 type="number"
                 value={movie.runtime}
+                required
                 onChange={(e) => handleChange("runtime", e.target.value)}
                 InputLabelProps={{ style: { color: '#94a3b8' } }}
                 InputProps={{
@@ -1185,6 +1191,7 @@ export default function AddMovie() {
                     fullWidth
                     label="Poster URL"
                     value={movie.poster}
+                    required
                     onChange={(e) => handleChange("poster", e.target.value)}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
