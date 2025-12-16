@@ -1012,7 +1012,7 @@ export default function AllMovies() {
         ) : (
           <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
             {filteredMovies.map((movie) => (
-              <Grid item xs={6} sm={3} md={2} lg={2.4} key={movie._id}>
+              <Grid item xs={6} sm={4} md={3} lg={2.4} key={movie._id}>
                 <Card
                   sx={{
                     bgcolor: '#1e293b',
@@ -1031,7 +1031,7 @@ export default function AllMovies() {
                   <Box sx={{ position: 'relative' }}>
                     <CardMedia
                       component="img"
-                      height={{ xs: 160, sm: 180, md: 190, lg: 200 }}
+                      height={{ xs: 160, sm: 180, md: 150, lg: 200 }}
                       image={movie.poster || 'https://via.placeholder.com/300x450/333/666?text=No+Image'}
                       alt={movie.title}
                       sx={{ objectFit: 'cover' }}
