@@ -1031,7 +1031,7 @@ export default function AllMovies() {
                   <Box sx={{ position: 'relative' }}>
                     <CardMedia
                       component="img"
-                      height={{ xs: 240, sm: 280, md: 320 }}
+                      height={{ xs: 180, sm: 200, md: 220 }}
                       image={movie.poster || 'https://via.placeholder.com/300x450/333/666?text=No+Image'}
                       alt={movie.title}
                       sx={{ objectFit: 'cover' }}
@@ -1105,7 +1105,7 @@ export default function AllMovies() {
                   </Box>
 
                   {/* Movie Info */}
-                  <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+                  <CardContent sx={{ p: { xs: 1, sm: 1.5 } }}>
                     <Typography
                       variant="h6"
                       sx={{
@@ -1115,7 +1115,7 @@ export default function AllMovies() {
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
-                        fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' }
+                        fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
                       }}
                     >
                       {movie.title}
@@ -1124,8 +1124,8 @@ export default function AllMovies() {
                     <Box sx={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: { xs: 0.75, sm: 1 },
-                      mb: 1
+                      gap: { xs: 0.5, sm: 0.75 },
+                      mb: 0.75
                     }}>
                       {movie.releaseDate && (
                         <Typography variant="body2" sx={{
@@ -1163,8 +1163,8 @@ export default function AllMovies() {
                           sx={{
                             bgcolor: '#334155',
                             color: '#cbd5e1',
-                            fontSize: { xs: '0.65rem', sm: '0.7rem' },
-                            height: { xs: 18, sm: 20 }
+                            fontSize: { xs: '0.6rem', sm: '0.65rem' },
+                            height: { xs: 16, sm: 18 }
                           }}
                         />
                       ))}

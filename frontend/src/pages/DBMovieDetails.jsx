@@ -105,7 +105,7 @@ export default function DBMovieDetails() {
     <Box sx={{ minHeight: '100vh', bgcolor: '#0f172a' }}>
       {/* Header */}
       <Box sx={{ bgcolor: 'black', borderBottom: '1px solid #1e293b', position: 'sticky', top: 0, zIndex: 50 }}>
-        <Box sx={{ maxWidth: '1280px', mx: 'auto', px: 2, py: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ maxWidth: '1280px', mx: 'auto', px: { xs: 1.5, sm: 2 }, py: { xs: 1, sm: 1.5 }, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <Box onClick={() => navigate('/')} sx={{ bgcolor: '#f59e0b', color: 'black', fontWeight: 'bold', px: 1, py: 0.5, borderRadius: 1, cursor: 'pointer' }}>
               IMDb
@@ -120,17 +120,20 @@ export default function DBMovieDetails() {
       {/* Hero Backdrop */}
       {movie.backdrop && (
         <Box sx={{
-          height: 500,
+          height: { xs: 300, sm: 400, md: 500 },
           background: `linear-gradient(to bottom, rgba(15,23,42,0.4), #0f172a), url(${movie.backdrop})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }} />
       )}
 
-      <Box sx={{ maxWidth: '1280px', mx: 'auto', px: 4, py: 4, mt: movie.backdrop ? -20 : 0 }}>
-        <Grid container spacing={5}>
+      <Box sx={{
+        maxWidth: '1280px', mx: 'auto', px: { xs: 2, sm: 3, md: 4 },
+        py: { xs: 3, sm: 4 }, mt: movie.backdrop ? { xs: -12, sm: -16, md: -20 } : 0
+      }}>
+        <Grid container spacing={{ xs: 3, sm: 4, md: 5 }}>
           {/* Poster */}
-          <Grid item xs={12} md={4} lg={3}>
+          <Grid item xs={12} sm={5} md={4} lg={3}>
             <Card sx={{ bgcolor: '#1e293b', border: '1px solid #334155', overflow: 'hidden' }}>
               <CardMedia
                 component="img"
@@ -162,11 +165,17 @@ export default function DBMovieDetails() {
 
           {/* Details */}
           <Grid item xs={12} md={8} lg={9}>
-            <Typography variant="h2" sx={{ color: 'white', fontWeight: 'bold', mb: 2 }}>
+            <Typography variant="h2" sx={{ color: 'white', fontWeight: 'bold', mb: 2, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' } }}>
               {movie.title}
             </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
+            <Box sx={{
+              display: 'flex', flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              gap: { xs: 1.5, sm: 3 },
+              mb: 3,
+              flexWrap: 'wrap'
+            }}>
               {movie.year && <Typography sx={{ color: '#94a3b8', fontSize: '1.2rem' }}>{movie.year}</Typography>}
               {movie.duration && (
                 <>
@@ -187,9 +196,12 @@ export default function DBMovieDetails() {
 
             {/* Genres */}
             {movie.genres?.length > 0 && (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 4 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 0.75, sm: 1 }, mb: 4 }}>
                 {movie.genres.map((g, i) => (
-                  <Chip key={i} label={g} sx={{ bgcolor: '#1e293b', color: '#cbd5e1', border: '1px solid #334155' }} />
+                  <Chip key={i} label={g} sx={{
+                    bgcolor: '#1e293b', color: '#cbd5e1', border: '1px solid #334155', fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    height: { xs: 28, sm: 32 }
+                  }} />
                 ))}
               </Box>
             )}
@@ -198,7 +210,7 @@ export default function DBMovieDetails() {
 
             {/* Description */}
             <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>Storyline</Typography>
-            <Typography sx={{ color: '#cbd5e1', lineHeight: 1.8, fontSize: '1.1rem' }}>
+            <Typography sx={{ color: '#cbd5e1', lineHeight: 1.8, fontSize: { xs: '0.95rem', sm: '1.05rem', md: '1.1rem' } }}>
               {movie.description || "No description available."}
             </Typography>
 
@@ -246,10 +258,10 @@ export default function DBMovieDetails() {
                     </Typography>
                     <Box sx={{
                       display: 'flex',
-                      gap: 2,
+                      gap: { xs: 1.5, sm: 2 },
                       overflowX: 'auto',
                       pb: 2,
-                      '&::-webkit-scrollbar': { height: 8 },
+                      '&::-webkit-scrollbar': { height: { xs: 6, sm: 8 } },
                       '&::-webkit-scrollbar-track': { bgcolor: '#1e293b' },
                       '&::-webkit-scrollbar-thumb': { bgcolor: '#475569', borderRadius: 1 }
                     }}>
@@ -263,7 +275,7 @@ export default function DBMovieDetails() {
                           <Box
                             key={i}
                             sx={{
-                              minWidth: 140,
+                              minWidth: { xs: 120, sm: 140 },
                               bgcolor: '#1e293b',
                               borderRadius: 2,
                               overflow: 'hidden',
@@ -274,7 +286,7 @@ export default function DBMovieDetails() {
                               <img
                                 src={actorPhoto.startsWith('http') ? actorPhoto : `https://image.tmdb.org/t/p/w185${actorPhoto}`}
                                 alt={actorName}
-                                style={{ width: '100%', height: 200, objectFit: 'cover' }}
+                                style={{ width: '100%', height: window.innerWidth < 640 ? 180 : 200, objectFit: 'cover' }}
                               />
                             ) : (
                               <Box sx={{
@@ -336,7 +348,7 @@ export default function DBMovieDetails() {
             <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 4 }}>
               More from Your Collection
             </Typography>
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
               {similar.map((m) => (
                 <Grid item xs={6} sm={4} md={3} lg={2} key={m._id}>
                   <Card
@@ -345,7 +357,7 @@ export default function DBMovieDetails() {
                   >
                     <CardMedia
                       component="img"
-                      height="280"
+                      height={{ xs: 200, sm: 240, md: 280 }}
                       image={m.poster || '/placeholder.jpg'}
                       alt={m.title}
                     />
