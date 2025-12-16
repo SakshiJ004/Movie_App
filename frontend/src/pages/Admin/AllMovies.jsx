@@ -1031,7 +1031,7 @@ export default function AllMovies() {
                   <Box sx={{ position: 'relative' }}>
                     <CardMedia
                       component="img"
-                      height={{ xs: 160, sm: 180, md: 150, lg: 200 }}
+                      height={{ xs: 120, sm: 140, md: 160, lg: 180 }}
                       image={movie.poster || 'https://via.placeholder.com/300x450/333/666?text=No+Image'}
                       alt={movie.title}
                       sx={{ objectFit: 'cover' }}
