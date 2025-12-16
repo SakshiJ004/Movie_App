@@ -4,10 +4,6 @@ const { transformTmdbMovie } = require("../utils/transformTmdbMovie");
 require("dotenv").config();
 const { addMovieToQueue, updateMovieInQueue, deleteMovieInQueue } = require("../services/queueService");
 
-/* ----------------------------------------------
-   GET /movies?page=&limit=
-   Paginated Movies
----------------------------------------------- */
 exports.getAllMovies = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -31,10 +27,6 @@ exports.getAllMovies = async (req, res) => {
   }
 };
 
-/* ----------------------------------------------
-   GET /movies/:id
-   Find movie by Mongo _id
----------------------------------------------- */
 exports.getMovieById = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
@@ -48,10 +40,6 @@ exports.getMovieById = async (req, res) => {
   }
 };
 
-/* ----------------------------------------------
-   GET /movies/tmdb/:id
-   Find movie by TMDB id field
----------------------------------------------- */
 exports.getMovieByTmdbId = async (req, res) => {
   try {
     const movie = await Movie.findOne({ id: req.params.id });
@@ -65,10 +53,6 @@ exports.getMovieByTmdbId = async (req, res) => {
   }
 };
 
-/* ----------------------------------------------
-   GET /movies/sorted?by=&order=
-   Sort movies by rating, releaseDate, etc.
----------------------------------------------- */
 exports.getSortedMovies = async (req, res) => {
   try {
     const by = req.query.by || "title";
@@ -90,10 +74,6 @@ exports.getSortedMovies = async (req, res) => {
   }
 };
 
-/* ----------------------------------------------
-   GET /movies/search?q=
-   Search by title or description
----------------------------------------------- */
 exports.searchMovies = async (req, res) => {
   try {
     const q = req.query.q;
@@ -114,26 +94,6 @@ exports.searchMovies = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-/* ----------------------------------------------
-   POST /movies
-   Add Movie (Admin)
----------------------------------------------- */
-
-
-// exports.addMovie = async (req, res) => {
-//   try {
-//     const movie = await Movie.create(req.body);
-
-//     res.status(201).json({
-//       message: "Movie added successfully",
-//       movie,
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// };
-
 
 exports.addMovie = async (req, res) => {
   try {
@@ -161,20 +121,18 @@ exports.addMovie = async (req, res) => {
       videos
     } = req.body;
 
-    // Ensure director has profilePath
     const directorObj = director
       ? {
         name: director.name,
-        profilePath: director.profilePath || "", // fallback if empty
+        profilePath: director.profilePath || "", 
         department: director.department || "Directing"
       }
       : null;
 
-    // Ensure each cast has profilePath
     const castArray = cast?.map((c) => ({
       name: c.name,
       character: c.character,
-      profilePath: c.profilePath || "", // fallback if empty
+      profilePath: c.profilePath || "", 
       order: c.order || 0,
       gender: c.gender || 0
     })) || [];
@@ -289,11 +247,6 @@ exports.deleteMovie = async (req, res) => {
   }
 };
 
-
-/* ----------------------------------------------
-   POST /movies/import
-   IMPORT MOVIE FROM TMDB
----------------------------------------------- */
 exports.importMovie = async (req, res) => {
   try {
     const movieId = req.body.id;
@@ -301,7 +254,6 @@ exports.importMovie = async (req, res) => {
     if (!movieId)
       return res.status(400).json({ message: "Movie ID is required" });
 
-    // Check if movie already exists
     const existingMovie = await Movie.findOne({ id: movieId });
     if (existingMovie) {
       return res.status(409).json({
@@ -310,15 +262,12 @@ exports.importMovie = async (req, res) => {
       });
     }
 
-    // Fetch full TMDB data (videos + credits included)
     const detailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=credits,videos`;
 
     const { data: tmdbMovie } = await axios.get(detailsUrl);
 
-    // Transform TMDB → MongoDB schema format
     const movieObject = transformTmdbMovie(tmdbMovie);
 
-    // Save movie
     const movie = await Movie.create(movieObject);
 
     res.json({
@@ -332,10 +281,6 @@ exports.importMovie = async (req, res) => {
   }
 };
 
-/* ----------------------------------------------
-   GET /movies/search-all?q=&source=
-   Search both DB and TMDB movies
----------------------------------------------- */
 exports.searchAllMovies = async (req, res) => {
   try {
     const { q, source = 'all', genre, yearFrom, yearTo, minRating } = req.query;
@@ -346,7 +291,6 @@ exports.searchAllMovies = async (req, res) => {
 
     let results = { db: [], tmdb: [] };
 
-    // Search MongoDB (if source is 'all' or 'db')
     if (source === 'all' || source === 'db') {
       let dbQuery = {
         $or: [
@@ -356,7 +300,6 @@ exports.searchAllMovies = async (req, res) => {
         ],
       };
 
-      // Add filters
       if (genre) {
         dbQuery.genres = genre;
       }
@@ -372,7 +315,6 @@ exports.searchAllMovies = async (req, res) => {
       results.db = await Movie.find(dbQuery).limit(50);
     }
 
-    // Search TMDB (if source is 'all' or 'tmdb')
     if (source === 'all' || source === 'tmdb') {
       try {
         const tmdbRes = await axios.get(
@@ -388,9 +330,7 @@ exports.searchAllMovies = async (req, res) => {
 
         let tmdbMovies = tmdbRes.data.results || [];
 
-        // Apply filters to TMDB results
         if (genre) {
-          // Fetch TMDB genres
           const genreRes = await axios.get(
             `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_API_KEY}`
           );
@@ -423,7 +363,6 @@ exports.searchAllMovies = async (req, res) => {
           );
         }
 
-        // Format TMDB results
         results.tmdb = tmdbMovies.slice(0, 50).map((m) => ({
           _id: `tmdb-${m.id}`,
           id: m.id,
@@ -434,7 +373,7 @@ exports.searchAllMovies = async (req, res) => {
             : null,
           rating: m.vote_average,
           releaseDate: m.release_date,
-          genres: [], // Will be populated on details page
+          genres: [],
         }));
       } catch (err) {
         console.error("TMDB search error:", err.message);

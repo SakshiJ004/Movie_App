@@ -9,13 +9,11 @@ const watchlistRoutes = require("./routes/watchlistRoutes")
 
 const app = express();
 
-// Middleware
-// Middleware - CORS Configuration
 app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://movie-app-eight-topaz.vercel.app'  // Your Vercel URL
+    'https://movie-app-eight-topaz.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -23,7 +21,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Connect MongoDB
 connectDB();
 
 // Routes

@@ -64,7 +64,6 @@ export default function DBMovieDetails() {
 
       setMovie(movieData);
 
-      // Optional: Load similar movies from your DB
       if (movieData.genres?.length > 0) {
         try {
           const simRes = await api.get("/movies", {
@@ -217,12 +216,6 @@ export default function DBMovieDetails() {
             {/* Extra Info */}
             {(movie.director || movie.cast?.length > 0) && (
               <Box sx={{ mt: 5 }}>
-                {/* {movie.director && (
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="caption" sx={{ color: '#94a3b8', textTransform: 'uppercase' }}>Director</Typography>
-                    <Typography sx={{ color: 'white', fontWeight: 600 }}>{movie.director}</Typography>
-                  </Box>
-                )} */}
                 {movie.director && (
                   <Grid item xs={12} sm={6}>
                     <Box sx={{
@@ -300,17 +293,6 @@ export default function DBMovieDetails() {
                     </Box>
                   </Grid>
                 )}
-                {/* {movie.cast?.length > 0 && (
-                  <Box>
-                    <Typography variant="caption" sx={{ color: '#94a3b8', textTransform: 'uppercase' }}>Top Cast</Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
-                      {movie.cast.slice(0, 8).map((actor, i) => (
-                        <Chip key={i} label={actor} size="small" sx={{ bgcolor: '#334155', color: '#e2e8f0' }} />
-                      ))}
-                    </Box>
-                  </Box>
-                )} */}
-
                 {movie.cast?.length > 0 && (
                   <Box sx={{ mt: 4 }}>
                     <Typography variant="h5" sx={{ color: 'white', fontWeight: 600, mb: 2 }}>
@@ -326,12 +308,10 @@ export default function DBMovieDetails() {
                       '&::-webkit-scrollbar-thumb': { bgcolor: '#475569', borderRadius: 1 }
                     }}>
                       {movie.cast.slice(0, 10).map((actor, i) => {
-                        // Handle both formats: string names OR objects with details
                         const actorName = typeof actor === 'string' ? actor : actor.name;
                         const actorChar = typeof actor === 'object' ? actor.character : '';
                         const actorPhoto = typeof actor === 'object' ? actor.profilePath : null;
 
-                        // Check if profilePath exists and is valid
                         const hasValidPhoto = actorPhoto && actorPhoto !== "" && actorPhoto !== "undefined";
 
                         return (
@@ -357,7 +337,6 @@ export default function DBMovieDetails() {
                                   objectFit: 'cover'
                                 }}
                                 onError={(e) => {
-                                  // If image fails to load, hide it and show placeholder
                                   e.target.style.display = 'none';
                                   const placeholder = e.target.nextElementSibling;
                                   if (placeholder) placeholder.style.display = 'flex';
@@ -365,7 +344,6 @@ export default function DBMovieDetails() {
                               />
                             ) : null}
 
-                            {/* Placeholder box - shown when no image */}
                             <Box sx={{
                               width: '100%',
                               height: 200,
@@ -419,7 +397,6 @@ export default function DBMovieDetails() {
           </Grid>
         </Grid>
 
-        {/* Similar from Your Collection */}
         {similar.length > 0 && (
           <Box sx={{ mt: 8 }}>
             <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 4 }}>

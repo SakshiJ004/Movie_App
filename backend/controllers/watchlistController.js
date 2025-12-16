@@ -1,21 +1,16 @@
 const Watchlist = require("../models/Watchlist");
 const Movie = require("../models/Movie");
 
-// GET /watchlist - Get user's watchlist
-// REPLACE getWatchlist function with this:
 exports.getWatchlist = async (req, res) => {
     try {
         const watchlist = await Watchlist.find({ userId: req.user._id })
             .sort({ addedAt: -1 });
 
-        // Populate movie details
         const moviesWithDetails = await Promise.all(
             watchlist.map(async (item) => {
                 let movie = null;
 
-                // Check if it's a MongoDB movie or TMDB movie
                 if (item.movieId.startsWith('tmdb-')) {
-                    // TMDB movie - fetch from TMDB API
                     const tmdbId = item.movieId.replace('tmdb-', '');
                     try {
                         const axios = require('axios');
@@ -36,7 +31,6 @@ exports.getWatchlist = async (req, res) => {
                         console.error(`Failed to fetch TMDB movie ${tmdbId}:`, err);
                     }
                 } else {
-                    // MongoDB movie
                     movie = await Movie.findById(item.movieId);
                 }
 
@@ -53,7 +47,6 @@ exports.getWatchlist = async (req, res) => {
     }
 };
 
-// POST /watchlist - Add movie to watchlist
 exports.addToWatchlist = async (req, res) => {
     try {
         const { movieId } = req.body;
@@ -62,7 +55,6 @@ exports.addToWatchlist = async (req, res) => {
             return res.status(400).json({ message: "Movie ID is required" });
         }
 
-        // Check if already in watchlist
         const existing = await Watchlist.findOne({
             userId: req.user._id,
             movieId
@@ -83,7 +75,6 @@ exports.addToWatchlist = async (req, res) => {
     }
 };
 
-// DELETE /watchlist/:movieId - Remove from watchlist
 exports.removeFromWatchlist = async (req, res) => {
     try {
         const { movieId } = req.params;
@@ -103,7 +94,6 @@ exports.removeFromWatchlist = async (req, res) => {
     }
 };
 
-// PATCH /watchlist/:movieId/watched - Toggle watched status
 exports.toggleWatched = async (req, res) => {
     try {
         const { movieId } = req.params;
@@ -115,7 +105,6 @@ exports.toggleWatched = async (req, res) => {
         });
 
         if (!watchlistItem) {
-            // If not in watchlist, add it with watched status
             watchlistItem = await Watchlist.create({
                 userId: req.user._id,
                 movieId,
@@ -132,7 +121,6 @@ exports.toggleWatched = async (req, res) => {
     }
 };
 
-// GET /watchlist/stats - Get watchlist statistics
 exports.getWatchlistStats = async (req, res) => {
     try {
         const total = await Watchlist.countDocuments({ userId: req.user._id });

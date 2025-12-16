@@ -101,9 +101,8 @@ const movieSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better search performance
 movieSchema.index({ title: 'text', description: 'text' });
-movieSchema.index({ id: 1 }); // FIXED: Changed from tmdbId to id
+movieSchema.index({ id: 1 });
 movieSchema.index({ rating: -1 });
 movieSchema.index({ releaseDate: -1 });
 

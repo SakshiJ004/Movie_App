@@ -15,19 +15,16 @@ export default function MovieRow({ movie, index }) {
         "&:hover": { backgroundColor: "#202020", cursor: "pointer" },
       }}
     >
-      {/* Rank Number */}
       <Typography sx={{ width: 50, color: "#bbb" }}>
         #{index + 1}
       </Typography>
 
-      {/* Poster */}
       <Avatar
         variant="rounded"
         src={movie.poster}
         sx={{ width: 60, height: 90, mr: 2 }}
       />
 
-      {/* Title + Meta */}
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="h6">{movie.title}</Typography>
         <Typography sx={{ color: "#999" }}>
@@ -35,7 +32,6 @@ export default function MovieRow({ movie, index }) {
         </Typography>
       </Box>
 
-      {/* Rating */}
       <Typography sx={{ color: "#f5c518", fontSize: "1.1rem" }}>
         ⭐ {movie.rating}
       </Typography>

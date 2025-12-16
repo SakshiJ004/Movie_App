@@ -7,7 +7,7 @@ const watchlistSchema = new mongoose.Schema({
         required: true
     },
     movieId: {
-        type: String, // Can be MongoDB _id or TMDB id
+        type: String,
         required: true
     },
     watched: {
@@ -22,7 +22,6 @@ const watchlistSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Ensure a user can't add the same movie twice
 watchlistSchema.index({ userId: 1, movieId: 1 }, { unique: true });
 
 module.exports = mongoose.model("Watchlist", watchlistSchema);
