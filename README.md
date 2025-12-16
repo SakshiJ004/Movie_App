@@ -9,13 +9,14 @@ The project uses **TMDB (The Movie Database)** instead of IMDb due to API access
 
 ## Live Application URL
 Vercel : https://movie-app-eight-topaz.vercel.app/
+
 Render : https://movie-app-sr0y.onrender.com/
 
 ---
 
 ## GitHub Repository
 
-> Add your GitHub repository link here
+https://github.com/SakshiJ004/Movie_App.git
 
 ---
 
