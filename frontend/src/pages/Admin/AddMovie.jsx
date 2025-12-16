@@ -1367,14 +1367,17 @@ export default function AddMovie() {
                   <TextField
                     fullWidth
                     size="small"
-                    label="Actor Name"
-                    value={castInput.name}
-                    onChange={(e) => setCastInput({ ...castInput, name: e.target.value })}
+                    label="Photo URL (Optional)"
+                    placeholder="Leave empty if no image"
+                    value={castInput.profilePath}
+                    onChange={(e) => setCastInput({ ...castInput, profilePath: e.target.value })}
                     InputLabelProps={{ style: { color: '#94a3b8' } }}
                     InputProps={{
                       style: { color: 'white' },
                       sx: { bgcolor: '#0f172a', '& fieldset': { borderColor: '#334155' } }
                     }}
+                    helperText="Optional: Enter image URL or leave empty"
+                    FormHelperTextProps={{ style: { color: '#64748b' } }}
                   />
                 </Grid>
                 <Grid item xs={12} md={3}>

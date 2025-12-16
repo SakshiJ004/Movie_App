@@ -1194,62 +1194,89 @@ url(${getImageUrl(isTmdbMovie ? movie.backdrop_path : movie.backdrop, "original"
                       borderRadius: 1
                     }
                   }}>
-                    {cast.map((person) => (
-                      <Box
-                        key={person.id}
-                        sx={{
-                          minWidth: { xs: 120, sm: 140 },
-                          bgcolor: '#1e293b',
-                          borderRadius: 2,
-                          overflow: 'hidden',
-                          border: '1px solid #334155',
-                          cursor: 'pointer',
-                          '&:hover': {
-                            borderColor: '#475569',
-                            transform: 'translateY(-4px)',
-                            transition: 'all 0.2s'
-                          }
-                        }}
-                      >
-                        <img
-                          src={getImageUrl(person.profile_path || person.profilePath, "w185")}
-                          alt={person.name}
-                          style={{
+                    {cast.map((person) => {
+                      const profilePath = person.profile_path || person.profilePath;
+                      const hasValidPhoto = profilePath && profilePath !== "" && profilePath !== "undefined";
+
+                      return (
+                        <Box
+                          key={person.id}
+                          sx={{
+                            minWidth: { xs: 120, sm: 140 },
+                            bgcolor: '#1e293b',
+                            borderRadius: 2,
+                            overflow: 'hidden',
+                            border: '1px solid #334155',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              borderColor: '#475569',
+                              transform: 'translateY(-4px)',
+                              transition: 'all 0.2s'
+                            }
+                          }}
+                        >
+                          {hasValidPhoto ? (
+                            <img
+                              src={getImageUrl(profilePath, "w185")}
+                              alt={person.name}
+                              style={{
+                                width: '100%',
+                                height: isMobile ? 180 : 200,
+                                objectFit: 'cover'
+                              }}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                const placeholder = e.target.nextElementSibling;
+                                if (placeholder) placeholder.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+
+                          <Box sx={{
                             width: '100%',
                             height: isMobile ? 180 : 200,
-                            objectFit: 'cover'
-                          }}
-                        />
-                        <Box sx={{ p: { xs: 1, sm: 1.5 } }}>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: 'white',
-                              fontWeight: 600,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              fontSize: { xs: '0.8rem', sm: '0.875rem' }
-                            }}
-                          >
-                            {person.name}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: '#94a3b8',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              display: 'block',
-                              fontSize: { xs: '0.7rem', sm: '0.75rem' }
-                            }}
-                          >
-                            {person.character}
-                          </Typography>
+                            bgcolor: '#334155',
+                            display: hasValidPhoto ? 'none' : 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#64748b',
+                            fontSize: '3rem',
+                            fontWeight: 'bold'
+                          }}>
+                            {person.name?.[0]?.toUpperCase() || '?'}
+                          </Box>
+
+                          <Box sx={{ p: { xs: 1, sm: 1.5 } }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'white',
+                                fontWeight: 600,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                              }}
+                            >
+                              {person.name}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#94a3b8',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                display: 'block',
+                                fontSize: { xs: '0.7rem', sm: '0.75rem' }
+                              }}
+                            >
+                              {person.character}
+                            </Typography>
+                          </Box>
                         </Box>
-                      </Box>
-                    ))}
+                      );
+                    })}
                   </Box>
                 </Box>
               )}

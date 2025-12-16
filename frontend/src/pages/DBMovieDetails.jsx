@@ -234,35 +234,69 @@ export default function DBMovieDetails() {
                       borderRadius: 2,
                       border: '1px solid #334155'
                     }}>
-                      {typeof movie.director === 'object' && movie.director.profilePath && (
-                        <img
-                          src={movie.director.profilePath.startsWith('http')
-                            ? movie.director.profilePath
-                            : `https://image.tmdb.org/t/p/w185${movie.director.profilePath}`}
-                          alt={movie.director.name}
-                          style={{
-                            width: 56,
-                            height: 56,
-                            borderRadius: '50%',
-                            objectFit: 'cover'
-                          }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                      )}
-                      <Box>
-                        <Typography variant="caption" sx={{
-                          color: '#94a3b8',
-                          textTransform: 'uppercase',
-                          letterSpacing: 1
-                        }}>
-                          Director
-                        </Typography>
-                        <Typography sx={{ color: 'white', fontWeight: 600, mt: 0.5 }}>
-                          {typeof movie.director === 'string' ? movie.director : movie.director.name}
-                        </Typography>
-                      </Box>
+                      {(() => {
+                        const directorName = typeof movie.director === 'string'
+                          ? movie.director
+                          : movie.director.name;
+                        const directorPhoto = typeof movie.director === 'object'
+                          ? movie.director.profilePath
+                          : null;
+                        const hasValidPhoto = directorPhoto && directorPhoto !== "" && directorPhoto !== "undefined";
+
+                        return (
+                          <>
+                            {hasValidPhoto ? (
+                              <img
+                                src={directorPhoto.startsWith('http')
+                                  ? directorPhoto
+                                  : `https://image.tmdb.org/t/p/w185${directorPhoto}`}
+                                alt={directorName}
+                                style={{
+                                  width: 56,
+                                  height: 56,
+                                  borderRadius: '50%',
+                                  objectFit: 'cover'
+                                }}
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  const placeholder = e.target.nextElementSibling;
+                                  if (placeholder) placeholder.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+
+                            {!hasValidPhoto && (
+                              <Box sx={{
+                                width: 56,
+                                height: 56,
+                                borderRadius: '50%',
+                                bgcolor: '#334155',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#64748b',
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold'
+                              }}>
+                                {directorName?.[0]?.toUpperCase() || 'D'}
+                              </Box>
+                            )}
+
+                            <Box>
+                              <Typography variant="caption" sx={{
+                                color: '#94a3b8',
+                                textTransform: 'uppercase',
+                                letterSpacing: 1
+                              }}>
+                                Director
+                              </Typography>
+                              <Typography sx={{ color: 'white', fontWeight: 600, mt: 0.5 }}>
+                                {directorName}
+                              </Typography>
+                            </Box>
+                          </>
+                        );
+                      })()}
                     </Box>
                   </Grid>
                 )}
@@ -297,6 +331,9 @@ export default function DBMovieDetails() {
                         const actorChar = typeof actor === 'object' ? actor.character : '';
                         const actorPhoto = typeof actor === 'object' ? actor.profilePath : null;
 
+                        // Check if profilePath exists and is valid
+                        const hasValidPhoto = actorPhoto && actorPhoto !== "" && actorPhoto !== "undefined";
+
                         return (
                           <Box
                             key={i}
@@ -308,44 +345,41 @@ export default function DBMovieDetails() {
                               border: '1px solid #334155',
                             }}
                           >
-                            {actorPhoto && actorPhoto !== "" ? (
+                            {hasValidPhoto ? (
                               <img
-                                src={actorPhoto.startsWith('http') ? actorPhoto : `https://image.tmdb.org/t/p/w185${actorPhoto}`}
+                                src={actorPhoto.startsWith('http')
+                                  ? actorPhoto
+                                  : `https://image.tmdb.org/t/p/w185${actorPhoto}`}
                                 alt={actorName}
-                                style={{ width: '100%', height: 200, objectFit: 'cover' }}
+                                style={{
+                                  width: '100%',
+                                  height: 200,
+                                  objectFit: 'cover'
+                                }}
                                 onError={(e) => {
+                                  // If image fails to load, hide it and show placeholder
                                   e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'flex';
+                                  const placeholder = e.target.nextElementSibling;
+                                  if (placeholder) placeholder.style.display = 'flex';
                                 }}
                               />
                             ) : null}
+
+                            {/* Placeholder box - shown when no image */}
                             <Box sx={{
                               width: '100%',
                               height: 200,
                               bgcolor: '#334155',
-                              display: actorPhoto && actorPhoto !== "" ? 'none' : 'flex',
+                              display: hasValidPhoto ? 'none' : 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               color: '#64748b',
                               fontSize: '3rem',
                               fontWeight: 'bold'
                             }}>
-                              {actorName?.[0]?.toUpperCase()}
+                              {actorName?.[0]?.toUpperCase() || '?'}
                             </Box>
-                            <Box sx={{
-                              width: '100%',
-                              height: 200,
-                              bgcolor: '#334155',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: '#64748b',
-                              fontSize: '3rem',
-                              fontWeight: 'bold'
-                            }}>
-                              {actorName?.[0]?.toUpperCase()}
-                            </Box>
-                            )}
+
                             <Box sx={{ p: 1.5 }}>
                               <Typography
                                 variant="body2"
