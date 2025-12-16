@@ -1012,7 +1012,7 @@ export default function AllMovies() {
         ) : (
           <Grid container spacing={{ xs: 2, sm: 2.5, md: 3 }}>
             {filteredMovies.map((movie) => (
-              <Grid item xs={6} sm={4} md={3} lg={2.4} key={movie._id}>
+              <Grid item xs={6} sm={3} md={2} lg={2.4} key={movie._id}>
                 <Card
                   sx={{
                     bgcolor: '#1e293b',
