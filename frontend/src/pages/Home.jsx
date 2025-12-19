@@ -12,7 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MovieCard from "../components/MovieCard";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const TMDB_KEY = import.meta.env.VITE_TMDB_KEY;
 
@@ -39,6 +39,7 @@ export default function Home() {
   const openMenu = Boolean(anchorEl);
   const handleOpenMenu = (e) => setAnchorEl(e.currentTarget);
   const handleCloseMenu = () => setAnchorEl(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     fetchTopRatedFromTMDB();
