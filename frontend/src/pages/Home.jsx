@@ -202,6 +202,7 @@ export default function Home() {
         <Box sx={{
           maxWidth: '1280px',
           mx: 'auto',
+          px: 0,
           // px: { xs: 1, sm: 2 },
           py: { xs: 1, sm: 1.5 },
           display: 'flex',
