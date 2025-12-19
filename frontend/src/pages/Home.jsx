@@ -191,7 +191,7 @@ export default function Home() {
     : 0;
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0f172a', m: 0, p: 0, width: '100vw', overflowX: 'hidden' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#0f172a' }}>
       <Box sx={{
         bgcolor: 'black',
         borderBottom: '1px solid #1e293b',
@@ -200,7 +200,7 @@ export default function Home() {
         zIndex: 50
       }}>
         <Box sx={{
-          maxWidth: '100%',
+          maxWidth: '1280px',
           mx: 0,
           px: 0,
           // px: { xs: 1, sm: 2 },
