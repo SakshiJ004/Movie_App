@@ -191,7 +191,7 @@ export default function Home() {
     : 0;
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0f172a' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#0f172a', m: 0, p: 0 }}>
       <Box sx={{
         bgcolor: 'black',
         borderBottom: '1px solid #1e293b',
@@ -201,7 +201,7 @@ export default function Home() {
       }}>
         <Box sx={{
           maxWidth: '1280px',
-          mx: 0,
+          mx: 'auto',
           px: 0,
           // px: { xs: 1, sm: 2 },
           py: { xs: 1, sm: 1.5 },
